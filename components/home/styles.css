@@ -1,0 +1,10 @@
+.colorDot {
+  background-image: radial-gradient(closest-side, #50209e, #000);
+  position: absolute;
+  height: 500;
+  width: 500;
+  top: -100px;
+  left: -16rem;
+  pointer-events: none; /* Prevents it from interfering with other elements */
+  border-radius: 100%;
+}
