@@ -1,11 +1,16 @@
 <<<<<<< HEAD
+
 # Task-Manager
+
 =======
 <<<<<<< HEAD
+
 # Task-Manager
+
 =======
 <a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
+<img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
+
   <h1 align="center">Next.js and Supabase Starter Kit</h1>
 </a>
 
@@ -85,7 +90,7 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
    NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
    ```
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/\_/settings/api)
 
 5. You can now run the Next.js local development server:
 
@@ -108,5 +113,5 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 - [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
 - [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
->>>>>>> bd3147f (checkpoint 1)
->>>>>>> 47f0374 (initial commit)
+  > > > > > > > bd3147f (checkpoint 1)
+  > > > > > > > 47f0374 (initial commit)

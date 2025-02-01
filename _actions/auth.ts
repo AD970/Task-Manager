@@ -30,7 +30,7 @@ export const signupAction = async (values: TypeSignupSchema) => {
   }
 };
 
-export const signInAction = async (values: TypeLoginSchema) => {
+export const loginAction = async (values: TypeLoginSchema) => {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -42,5 +42,5 @@ export const signInAction = async (values: TypeLoginSchema) => {
     return encodedRedirect("error", "/login", error.message);
   }
 
-  return redirect("/dashboard");
+  return redirect("/webapp/dashboard");
 };

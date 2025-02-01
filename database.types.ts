@@ -33,36 +33,39 @@ export type Database = {
       tasks: {
         Row: {
           actual_end_date: string | null;
+          checked: boolean;
           created_at: string | null;
           description: string | null;
           id: number;
           planned_end_date: string | null;
           planned_start_date: string | null;
-          status: string | null;
+          priority: string | null;
           title: string;
           updated_at: string | null;
           user_id: string;
         };
         Insert: {
           actual_end_date?: string | null;
+          checked?: boolean;
           created_at?: string | null;
           description?: string | null;
           id?: never;
           planned_end_date?: string | null;
           planned_start_date?: string | null;
-          status?: string | null;
+          priority?: string | null;
           title: string;
           updated_at?: string | null;
           user_id: string;
         };
         Update: {
           actual_end_date?: string | null;
+          checked?: boolean;
           created_at?: string | null;
           description?: string | null;
           id?: never;
           planned_end_date?: string | null;
           planned_start_date?: string | null;
-          status?: string | null;
+          priority?: string | null;
           title?: string;
           updated_at?: string | null;
           user_id?: string;

@@ -1,44 +1,28 @@
-
-
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { createClient } from "@/utils/supabase/server";
-import { Bell, MoreVertical, Share2} from "lucide-react";
+import { Bell, MoreVertical, Share2 } from "lucide-react";
 import React from "react";
 
 type Props = {};
 
-
-
-
-
-async function Hero(){
-
-
-  return(
+async function Hero() {
+  return (
     <main className="grid gap-4 grid-cols-12 p-4">
-      
-      <div className="md:col-span-4">
-        <Card>
-          <CardHeader className="flex  items-center">
-              Overall Information
-              a
-            <div className="flex gap-2">
-              <Share2 />
-              <MoreVertical />
-            </div>
-          </CardHeader>
-        </Card>
+      <div className="md:col-span-4 bg-zinc-800 dark:bg-slate-400 p-4 rounded-lg">
+        <div className="flex justify-between items-center">
+          Overall information
+          <div className="flex gap-4">
+            <Share2 />
+            <MoreVertical />
+          </div>
+        </div>
       </div>
-
     </main>
-
-  )
+  );
 }
-
-
 
 export default async function page({}: Props) {
   const supabase = await createClient();
@@ -71,12 +55,11 @@ export default async function page({}: Props) {
           </h1>
         </div>
         <div className="flex items-center gap-4">
-
-        <div className="flex gap-2">
-          <Button variant="ghost" size="icon">
-            <Bell />
-          </Button>
-        </div>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="icon">
+              <Bell />
+            </Button>
+          </div>
         </div>
       </div>
       <Separator />

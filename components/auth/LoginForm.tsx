@@ -1,4 +1,5 @@
-import { GalleryVerticalEnd } from "lucide-react";
+"use client";
+import { GalleryVerticalEnd, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,56 +13,109 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaGoogle } from "react-icons/fa";
+import { loginAction } from "@/_actions/auth";
+import { TypeLoginSchema, LoginSchema } from "@/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useTransition } from "react";
+import Link from "next/link";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [isPending, startTransition] = useTransition();
+  const form = useForm<TypeLoginSchema>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(data: TypeLoginSchema) {
+    startTransition(async () => {
+      await loginAction(data);
+    });
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Signup</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Create an account to use this website
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <Input
-                  id="password"
-                  placeholder="******"
-                  type="password"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Login
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="m@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="******"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? (
+                  <div className="flex gap-2 items-center">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </Button>
               <Button variant="outline" className="w-full">
-                <FaGoogle />
+                <FaGoogle className="mr-2" />
+                Login with Google
               </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
-          </form>
+              <div className="mt-4 text-center text-sm">
+                Don't have an account?{" "}
+                <Link href="/sign-up" className="underline underline-offset-4">
+                  Sign Up
+                </Link>
+              </div>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

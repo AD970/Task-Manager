@@ -1,5 +1,5 @@
 import { signInAction } from "@/app/actions";
-import SignInForm from "@/components/auth/LoginForm";
+import LoginForm from "@/components/auth/LoginForm";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <SignInForm />
+        <LoginForm />
       </div>
     </div>
   );
