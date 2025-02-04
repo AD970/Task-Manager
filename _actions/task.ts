@@ -40,3 +40,29 @@ export async function AddTask(values: TypeAddTaskSchema) {
   }
   revalidatePath("/webapp/tasks");
 }
+
+
+export async function OnCheckTask(task_id: number, task_checked: boolean) {
+  const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user?.id) {
+    return { error: "User not authenticated" }; // Don't redirect, just return an error
+  }
+
+  const user_id = user.id;
+
+  const { error: onCheckError } = await supabase
+    .from("tasks")
+    .update({ checked: !task_checked }) // Toggle checked state
+    .eq("id", task_id);
+
+  if (onCheckError) {
+    return { error: "Something went wrong, please try again" };
+  }
+
+  // Revalidate the page so the UI updates
+  revalidatePath("/webapp/tasks");
+
+  return { success: "Task completed" };
+}

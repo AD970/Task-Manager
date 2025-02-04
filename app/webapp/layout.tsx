@@ -4,6 +4,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ToastProvider } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
 import { AppSidebar } from "@/components/webapp/sidebar/WebApp-Sidebar";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -39,6 +40,7 @@ export default async function WebAppLayout({
           <AppSidebar profile={profileData} />
           <SidebarInset>{children}</SidebarInset>
         </SidebarProvider>
+        <Toaster />
       </ToastProvider>
     </main>
   );

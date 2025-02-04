@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FaFlag } from "react-icons/fa";
@@ -81,7 +81,7 @@ export default function TaskForm({ setLoadingTask }: Props) {
     defaultValues: {
       title: "",
       priority: "medium",
-      hour: "00:00",
+      hour: "23:59",
       day: new Date(),
       description: "",
     },

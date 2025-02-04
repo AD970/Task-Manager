@@ -10,8 +10,8 @@ type TaskSectionProps = {
 export default function TaskSection({ tasks }: TaskSectionProps) {
   const [loadingTask, setLoadingTask] = useState("");
   return (
-    <div className="w-full ">
-      <div className="space-y-8">
+    <div className="w-full overflow-y-scroll max-h-screen ">
+      <div className="space-y-8 ">
         <TaskForm setLoadingTask={setLoadingTask} />
         <TaskList loadingTask={loadingTask} tasks={tasks} />
       </div>
