@@ -1,21 +1,11 @@
-"use client"
-import {
-  useState
-} from "react"
+"use client";
+import { useState } from "react";
 
-import {
-  useForm
-} from "react-hook-form"
-import {
-  zodResolver
-} from "@hookform/resolvers/zod"
-import * as z from "zod"
-import {
-  cn
-} from "@/lib/utils"
-import {
-  Button
-} from "@/components/ui/button"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -24,25 +14,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import {
-  Input
-} from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-import {
-  Textarea
-} from "@/components/ui/textarea"
-import { Task } from '@/types';
+import { Textarea } from "@/components/ui/textarea";
+import { Task } from "@/types";
 
-import { EditTask } from '@/_actions/task';
-import { useToast } from '@/hooks/use-toast';
-import useSelectTaskStore from '@/lib/store/useTaskStore'
-import { EditTaskSchema, TypeEditTaskSchema } from '@/schema/task';
-import { createClient } from '@/utils/supabase/client';
-import { redirect } from 'next/navigation';
-import React, { startTransition, useEffect,  useTransition } from 'react'
-import {priorities} from '@/constants'
-import { Plus, ChevronDown, CalendarDays, ChevronRight, Flag, LoaderCircle } from "lucide-react";
+import { EditTask } from "@/_actions/task";
+import { useToast } from "@/hooks/use-toast";
+import useSelectTaskStore from "@/lib/store/useTaskStore";
+import { EditTaskSchema, TypeEditTaskSchema } from "@/schema/task";
+import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
+import React, { startTransition, useEffect, useTransition } from "react";
+import { priorities } from "@/constants";
+import {
+  Plus,
+  ChevronDown,
+  CalendarDays,
+  ChevronRight,
+  Flag,
+  LoaderCircle,
+} from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -57,11 +50,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Calendar } from "@/components/ui/calendar";
-import { FaFlag } from "react-icons/fa6"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FaFlag } from "react-icons/fa6";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 type Props = {
-    task: Task
-}
+  task: Task;
+};
 
 const generateTimeOptions = () => {
   const times: string[] = [];
@@ -76,210 +75,212 @@ const generateTimeOptions = () => {
   return times;
 };
 
+export default function TaskInformationForm({ task }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const { toast } = useToast();
+  const { selectTask } = useSelectTaskStore();
+  const { task_id: useSelectTaskStoreId } = useSelectTaskStore();
+  const isDisabled = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparison
+    return date < today || date > new Date("2050-01-01");
+  };
+  const timeOptions = generateTimeOptions();
+  const task_id = task.id;
+  const form = useForm<TypeEditTaskSchema>({
+    resolver: zodResolver(EditTaskSchema),
+    defaultValues: {
+      title: task?.title,
+      priority: task?.priority ?? "medium",
+      hour: task?.planned_end_date
+        ? new Date(task.planned_end_date).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }) // Local time, 24-hour format
+        : "",
+      day: task?.planned_end_date ? new Date(task.planned_end_date) : undefined,
+      description: task?.description || "",
+    },
+  });
 
-export default function TaskInformationForm({task}: Props) {
-      const [isPending, startTransition] = useTransition();
-        const [error, setError] = useState<string | undefined>("");
-        const {toast} = useToast()
-        const {selectTask} = useSelectTaskStore();
-        const {task_id: useSelectTaskStoreId} = useSelectTaskStore();
-        const isDisabled = (date: Date) => {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparison
-          return date < today || date > new Date("2050-01-01");
-        };
-        const timeOptions = generateTimeOptions()
-    const task_id = task.id
-    const form = useForm<TypeEditTaskSchema>({
-        resolver: zodResolver(EditTaskSchema),
-        defaultValues: {
-          title: task?.title,
-          priority: task?.priority ?? 'medium',
-          hour: task?.planned_end_date 
-          ? new Date(task.planned_end_date).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) // Local time, 24-hour format
-          : "",    day: task?.planned_end_date ? new Date(task.planned_end_date) : undefined, 
-          description: task?.description || '' ,
-        },
-      });
-
-      async function onSubmit(values: TypeEditTaskSchema) {
-        
-        startTransition(async () => {
-          await EditTask(task_id,values).then((data) => {
-            if (data?.error) {
-              setError(data?.error.toString()); 
-              toast({
-                title: "Uh oh! Something went wrong.",
-                description: "There was a problem with your request.",
-              });
-            }
-            
-            toast({
-              title: "Task have been updated!",
-              description: data.success,
-            });
-            selectTask(null)
+  async function onSubmit(values: TypeEditTaskSchema) {
+    startTransition(async () => {
+      await EditTask(task_id, values).then((data) => {
+        if (data?.error) {
+          setError(data?.error.toString());
+          toast({
+            title: "Uh oh! Something went wrong.",
+            description: "There was a problem with your request.",
           });
+        }
+
+        toast({
+          title: "Task have been updated!",
+          description: data.success,
         });
-      }
+        selectTask(null);
+      });
+    });
+  }
 
-
-      // useEffect(() => {
-      //   if (task) {
-      //     form.reset({
-      //       title: task.title || '',
-      //       priority: task.priority || 'medium',
-      //       hour: task.planned_end_date 
-      //         ? new Date(task.planned_end_date).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) 
-      //         : "",    
-      //       day: task.planned_end_date ? new Date(task.planned_end_date) : undefined, 
-      //       description: task.description || '',
-      //     });
-      //   }
-      // }, [task, form,useSelectTaskStoreId]);
+  // useEffect(() => {
+  //   if (task) {
+  //     form.reset({
+  //       title: task.title || '',
+  //       priority: task.priority || 'medium',
+  //       hour: task.planned_end_date
+  //         ? new Date(task.planned_end_date).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
+  //         : "",
+  //       day: task.planned_end_date ? new Date(task.planned_end_date) : undefined,
+  //       description: task.description || '',
+  //     });
+  //   }
+  // }, [task, form,useSelectTaskStoreId]);
   return (
-    <div >
-
+    <div>
       {/* title */}
-        <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-4 mx-auto py-2 ">
-        
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input 
-                placeholder=""
-                
-                type=""
-                {...field} />
-              </FormControl>
-              
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* description */}
-        <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Description</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Description"
-                              className="resize-none"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-            
-                      {/* priority */}
-                  <FormField
-                    control={form.control}
-                    name="priority"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Priority</FormLabel>
-                        <RadioGroup
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          className="flex items-center gap-4"
-                        >
-                          {priorities.map((priority) => (
-                            <div
-                              key={priority.value}
-                              className="flex space-x-2 items-center"
-                            >
-                              <RadioGroupItem value={priority.value} />
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    <FaFlag  className={cn(priority.color)} />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>{priority.name}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                      </FormItem>
-                    )}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 p-4 mx-auto py-2 "
+        >
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="" type="" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* description */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Description"
+                    className="resize-none"
+                    {...field}
                   />
-            
-{/* calendar */}
-                    <div className="">
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* priority */}
+          <FormField
+            control={form.control}
+            name="priority"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Priority</FormLabel>
+                <RadioGroup
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="flex items-center gap-4"
+                >
+                  {priorities.map((priority) => (
+                    <div
+                      key={priority.value}
+                      className="flex space-x-2 items-center"
+                    >
+                      <RadioGroupItem value={priority.value} />
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <FaFlag className={cn(priority.color)} />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{priority.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </FormItem>
+            )}
+          />
+
+          {/* calendar */}
+          <div className="">
+            <FormField
+              control={form.control}
+              name="day"
+              render={({ field }) => (
+                <FormItem>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={isDisabled}
+                  />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex items-center  justify-between">
+            <FormField
+              control={form.control}
+              name="hour"
+              render={({ field }) => (
+                <FormItem className="mt-4">
+                  <FormControl>
+                    <Input {...field} type="time" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
-                    control={form.control}
-                    name="day"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Calendar
-                          mode="single"
-                          
-                          selected={field.value }
-                          onSelect={field.onChange}
-                          disabled={isDisabled}
-                        />
-                      </FormItem>
-                    )}
-                  />
-                  </div>
-                <div className="flex items-center  justify-between">
-                  <FormField
-                    control={form.control}
-                    name="hour"
-                    render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormControl>
-                          <Input {...field} type="time" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              control={form.control}
+              name="hour"
+              render={({ field }) => (
+                <FormItem className="mt-4">
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeOptions.map((time) => (
+                          <SelectItem key={time} value={time}>
+                            {time}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-                  <FormField
-                    control={form.control}
-                    name="hour"
-                    render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormControl>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select Time" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {timeOptions.map((time) => (
-                                <SelectItem key={time} value={time}>
-                                  {time}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  </div>
-                
-        <Button className="w-full" type="submit">{isPending ?  <div className="flex items-center  gap-2"><LoaderCircle className="h-4 w-4 animate-spin" /> <span> Updating... </span></div>: 'Update'}</Button>
-      </form>
-    </Form>
+          <Button className="w-full" type="submit">
+            {isPending ? (
+              <div className="flex items-center  gap-2">
+                <LoaderCircle className="h-4 w-4 animate-spin" />{" "}
+                <span> Updating... </span>
+              </div>
+            ) : (
+              "Update"
+            )}
+          </Button>
+        </form>
+      </Form>
     </div>
-  )
+  );
 }

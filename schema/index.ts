@@ -25,8 +25,7 @@ export const LoginSchema = z.object({
 export type TypeLoginSchema = z.infer<typeof LoginSchema>;
 
 export const OnCheckSchema = z.object({
- checked: z.boolean()
+  checked: z.boolean(),
 });
-
 
 export type TypeOnCheckSchema = z.infer<typeof OnCheckSchema>;

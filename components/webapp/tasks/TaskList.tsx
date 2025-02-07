@@ -5,12 +5,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Task } from "@/types";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import {  ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import React, { useState, useTransition } from "react";
-import { TypeOnCheckSchema,OnCheckSchema } from "@/schema";
+import { TypeOnCheckSchema, OnCheckSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {TaskItem} from './TaskItem'
+import { TaskItem } from "./TaskItem";
 type Props = {
   tasks: null | Task[];
   loadingTask: string;
@@ -29,31 +29,34 @@ export default function TaskList({ tasks, loadingTask }: Props) {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Start of today
-  
+
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1); // Start of tomorrow
-  
+
   const now = new Date(); // Current time
-  
+
   const twoMinutesAgo = new Date();
   twoMinutesAgo.setMinutes(now.getMinutes() - 2); // 2 hours ago from now
-  
+
   const todayTasks = tasks?.filter((task) => {
     if (!task.planned_end_date) return false;
     const plannedDate = new Date(task.planned_end_date);
-    return plannedDate >= today && plannedDate < tomorrow && plannedDate > twoMinutesAgo// Strictly today
+    return (
+      plannedDate >= today &&
+      plannedDate < tomorrow &&
+      plannedDate > twoMinutesAgo
+    ); // Strictly today
   });
-  
-  
+
   const overdueTasks = tasks?.filter((task) => {
     if (!task.planned_end_date) return false;
     const plannedDate = new Date(task.planned_end_date);
     return plannedDate < twoMinutesAgo; // More than 2 hours late
   });
-  
+
   const weekEnd = new Date(today);
   weekEnd.setDate(today.getDate() + 7); // 7 days from today
-  
+
   const weekTasks = tasks?.filter((task) => {
     if (!task.planned_end_date) return false;
     const taskDate = new Date(task.planned_end_date);
@@ -61,19 +64,17 @@ export default function TaskList({ tasks, loadingTask }: Props) {
   });
 
   const form = useForm<TypeOnCheckSchema>({
-      resolver: zodResolver(OnCheckSchema),
-      defaultValues: {
-      checked: false
-      },
-    });
-   
-  
-    
+    resolver: zodResolver(OnCheckSchema),
+    defaultValues: {
+      checked: false,
+    },
+  });
+
   return (
     <div className="p-4 ">
       <div className="px-8 flex flex-col gap-4">
         {/* overdue */}
-      <Collapsible
+        <Collapsible
           className="space-y-4"
           open={overdueTasksCollapsible}
           onOpenChange={setOverdueTasksCollapsible}
@@ -86,14 +87,18 @@ export default function TaskList({ tasks, loadingTask }: Props) {
                   overdueTasksCollapsible ? "rotate-90" : "",
                 )}
               />
-              <h4 className="text-sm  space-x-1"> <span>Overdue</span>  <span className="text-muted-foreground text-xs">{overdueTasks?.length}</span> </h4>
+              <h4 className="text-sm  space-x-1">
+                {" "}
+                <span>Overdue</span>{" "}
+                <span className="text-muted-foreground text-xs">
+                  {overdueTasks?.length}
+                </span>{" "}
+              </h4>
             </button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2">
             {overdueTasks?.map((task) => (
-              
-             <TaskItem key={task.id} task={task} overdue={true} />
-         
+              <TaskItem key={task.id} task={task} overdue={true} />
             ))}
           </CollapsibleContent>
         </Collapsible>
@@ -111,18 +116,20 @@ export default function TaskList({ tasks, loadingTask }: Props) {
                   todayTasksCollapsible ? "rotate-90" : "",
                 )}
               />
-              <h4 className="text-sm  space-x-1"> <span>Today</span>  <span className="text-muted-foreground text-xs">{todayTasks?.length}</span> </h4>
+              <h4 className="text-sm  space-x-1">
+                {" "}
+                <span>Today</span>{" "}
+                <span className="text-muted-foreground text-xs">
+                  {todayTasks?.length}
+                </span>{" "}
+              </h4>
             </button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2">
-            {todayTasks?.map((task) => (
-              
-             <TaskItem key={task.id} task={task} />
-         
-            ))}
+            {todayTasks?.map((task) => <TaskItem key={task.id} task={task} />)}
           </CollapsibleContent>
         </Collapsible>
-{/* week */}
+        {/* week */}
         <Collapsible
           className="space-y-4"
           open={weekTasksCollapsible}
@@ -136,17 +143,21 @@ export default function TaskList({ tasks, loadingTask }: Props) {
                   weekTasksCollapsible ? "rotate-90" : "",
                 )}
               />
-              <h4 className="text-sm  space-x-1"> <span>Week</span> <span className="text-muted-foreground text-xs">{weekTasks?.length}</span> </h4>
-              </button>
+              <h4 className="text-sm  space-x-1">
+                {" "}
+                <span>Week</span>{" "}
+                <span className="text-muted-foreground text-xs">
+                  {weekTasks?.length}
+                </span>{" "}
+              </h4>
+            </button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2">
-         {weekTasks?.map((task) => (
-          <TaskItem key={task.id} task={task} />
-         ))}
+            {weekTasks?.map((task) => <TaskItem key={task.id} task={task} />)}
           </CollapsibleContent>
         </Collapsible>
 
-{/* all tasks */}
+        {/* all tasks */}
         <Collapsible
           className="space-y-4"
           open={allTasksCollapsible}
@@ -160,13 +171,17 @@ export default function TaskList({ tasks, loadingTask }: Props) {
                   weekTasksCollapsible ? "rotate-90" : "",
                 )}
               />
-              <h4 className="text-sm  space-x-1"> <span>All Tasks</span> <span className="text-muted-foreground text-xs">{tasks?.length}</span> </h4>
-              </button>
+              <h4 className="text-sm  space-x-1">
+                {" "}
+                <span>All Tasks</span>{" "}
+                <span className="text-muted-foreground text-xs">
+                  {tasks?.length}
+                </span>{" "}
+              </h4>
+            </button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2">
-         {tasks?.map((task) => (
-          <TaskItem key={task.id} task={task} />
-         ))}
+            {tasks?.map((task) => <TaskItem key={task.id} task={task} />)}
           </CollapsibleContent>
         </Collapsible>
 

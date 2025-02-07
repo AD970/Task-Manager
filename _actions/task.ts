@@ -41,11 +41,12 @@ export async function AddTask(values: TypeAddTaskSchema) {
   revalidatePath("/webapp/tasks");
 }
 
-
-
 export async function OnCheckTask(task_id: number, task_checked: boolean) {
   const supabase = await createClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
   if (userError || !user?.id) {
     return { error: "User not authenticated" }; // Don't redirect, just return an error
@@ -68,11 +69,12 @@ export async function OnCheckTask(task_id: number, task_checked: boolean) {
   return { success: "Task completed" };
 }
 
-
-
 export async function EditTask(task_id: number, values: TypeEditTaskSchema) {
   const supabase = await createClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
   if (userError || !user?.id) {
     return { error: "User not authenticated" };
@@ -99,9 +101,9 @@ export async function EditTask(task_id: number, values: TypeEditTaskSchema) {
     .eq("user_id", user_id); // Ensure task belongs to user
 
   if (updateError) {
-    return { error: updateError ,};
+    return { error: updateError };
   }
 
-  revalidatePath('/webapp/tasks')
+  revalidatePath("/webapp/tasks");
   return { success: "Task updated successfully" };
 }

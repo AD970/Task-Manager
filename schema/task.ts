@@ -13,7 +13,6 @@ export const AddTaskSchema = z.object({
 
 export type TypeAddTaskSchema = z.infer<typeof AddTaskSchema>;
 
-
 export const EditTaskSchema = z.object({
   title: z
     .string()

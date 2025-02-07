@@ -6,7 +6,13 @@ import React, {
   useTransition,
 } from "react";
 import { Input } from "@/components/ui/input";
-import { Plus, ChevronDown, CalendarDays, ChevronRight, Flag } from "lucide-react";
+import {
+  Plus,
+  ChevronDown,
+  CalendarDays,
+  ChevronRight,
+  Flag,
+} from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -105,8 +111,6 @@ export default function TaskForm({ setLoadingTask }: Props) {
     });
   }
 
-
-
   const timeOptions = generateTimeOptions();
   return (
     <div className="p-4">
@@ -172,7 +176,7 @@ export default function TaskForm({ setLoadingTask }: Props) {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger>
-                                    <FaFlag  className={cn(priority.color)} />
+                                    <FaFlag className={cn(priority.color)} />
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>{priority.name}</p>

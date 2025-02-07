@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -15,7 +14,7 @@ export default async function TaskPage({}: Props) {
   } = await supabase.auth.getUser();
 
   const user_id = user?.id;
-if (userError || !user_id) {
+  if (userError || !user_id) {
     return redirect("login");
   }
 
@@ -23,21 +22,21 @@ if (userError || !user_id) {
     .from("tasks")
     .select("*")
     .eq("user_id", user_id)
-    .eq('checked',false)
+    .eq("checked", false);
 
   if (taskError) {
     console.log("something is off");
   }
   return (
     <div className="grid grid-cols-12 max-h-screen">
-      <div className="h-screen flex col-span-12  md:col-span-8  flex-col gap-4 ">
+      <div className="h-screen flex col-span-12  md:col-span-12 lg:col-span-8 flex-col gap-4 ">
         <div className="flex items-center p-4 border-b ">
           <h1>All tasks</h1>
         </div>
         <TaskSection tasks={taskData} />
       </div>
-      <div className="border-l h-screen md:col-span-2 lg:col-span-4">
-       <TaskInformation />
+      <div className="border-l h-screen hidden sm:hidden lg:inline-block  lg:col-span-4">
+        <TaskInformation />
       </div>
     </div>
   );
