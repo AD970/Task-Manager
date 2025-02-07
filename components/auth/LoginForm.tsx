@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FaGoogle } from "react-icons/fa";
 import { loginAction } from "@/_actions/auth";
 import { TypeLoginSchema, LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -105,7 +104,6 @@ export default function LoginForm({
                 )}
               </Button>
               <Button variant="outline" className="w-full">
-                <FaGoogle className="mr-2" />
                 Login with Google
               </Button>
               <div className="mt-4 text-center text-sm">

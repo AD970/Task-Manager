@@ -1,19 +1,15 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Form } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Task } from "@/types";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import {  ChevronRight } from "lucide-react";
 import React, { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
 import { TypeOnCheckSchema,OnCheckSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { OnCheckTask } from "@/_actions/task";
 import {TaskItem} from './TaskItem'
 type Props = {
   tasks: null | Task[];
@@ -48,6 +44,7 @@ export default function TaskList({ tasks, loadingTask }: Props) {
     return plannedDate >= today && plannedDate < tomorrow && plannedDate > twoMinutesAgo// Strictly today
   });
   
+  
   const overdueTasks = tasks?.filter((task) => {
     if (!task.planned_end_date) return false;
     const plannedDate = new Date(task.planned_end_date);
@@ -70,10 +67,12 @@ export default function TaskList({ tasks, loadingTask }: Props) {
       },
     });
    
-   
+  
+    
   return (
     <div className="p-4 ">
       <div className="px-8 flex flex-col gap-4">
+        {/* overdue */}
       <Collapsible
           className="space-y-4"
           open={overdueTasksCollapsible}
@@ -98,6 +97,7 @@ export default function TaskList({ tasks, loadingTask }: Props) {
             ))}
           </CollapsibleContent>
         </Collapsible>
+        {/* today */}
         <Collapsible
           className="space-y-4"
           open={todayTasksCollapsible}
@@ -122,7 +122,7 @@ export default function TaskList({ tasks, loadingTask }: Props) {
             ))}
           </CollapsibleContent>
         </Collapsible>
-
+{/* week */}
         <Collapsible
           className="space-y-4"
           open={weekTasksCollapsible}
@@ -141,6 +141,30 @@ export default function TaskList({ tasks, loadingTask }: Props) {
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2">
          {weekTasks?.map((task) => (
+          <TaskItem key={task.id} task={task} />
+         ))}
+          </CollapsibleContent>
+        </Collapsible>
+
+{/* all tasks */}
+        <Collapsible
+          className="space-y-4"
+          open={allTasksCollapsible}
+          onOpenChange={setAllTasksCollapsible}
+        >
+          <CollapsibleTrigger asChild>
+            <button className="flex items-center gap-2">
+              <ChevronRight
+                className={cn(
+                  "duration-300 h-4 w-4 text-muted-foreground",
+                  weekTasksCollapsible ? "rotate-90" : "",
+                )}
+              />
+              <h4 className="text-sm  space-x-1"> <span>All Tasks</span> <span className="text-muted-foreground text-xs">{tasks?.length}</span> </h4>
+              </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2">
+         {tasks?.map((task) => (
           <TaskItem key={task.id} task={task} />
          ))}
           </CollapsibleContent>

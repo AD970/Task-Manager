@@ -1,26 +1,10 @@
-import { Input } from "@/components/ui/input";
-import { Plus, ChevronDown } from "lucide-react";
+
 import React from "react";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { FaFlag } from "react-icons/fa";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import TaskForm from "@/components/webapp/tasks/TaskForm";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import TaskSection from "@/components/webapp/tasks/TaskSection";
+import TaskInformation from "@/components/webapp/tasks/TaskInformation";
+// import TaskInformation from "@/components/webapp/tasks/TaskInformation";
 type Props = {};
 
 export default async function TaskPage({}: Props) {
@@ -53,7 +37,7 @@ if (userError || !user_id) {
         <TaskSection tasks={taskData} />
       </div>
       <div className="border-l h-screen md:col-span-2 lg:col-span-4">
-        <p>ad</p>
+       <TaskInformation />
       </div>
     </div>
   );

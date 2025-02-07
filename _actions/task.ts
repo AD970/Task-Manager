@@ -1,6 +1,6 @@
 "use server";
 
-import { TypeAddTaskSchema } from "@/schema/task";
+import { TypeAddTaskSchema, TypeEditTaskSchema } from "@/schema/task";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -42,6 +42,7 @@ export async function AddTask(values: TypeAddTaskSchema) {
 }
 
 
+
 export async function OnCheckTask(task_id: number, task_checked: boolean) {
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -65,4 +66,42 @@ export async function OnCheckTask(task_id: number, task_checked: boolean) {
   revalidatePath("/webapp/tasks");
 
   return { success: "Task completed" };
+}
+
+
+
+export async function EditTask(task_id: number, values: TypeEditTaskSchema) {
+  const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user?.id) {
+    return { error: "User not authenticated" };
+  }
+
+  const user_id = user.id;
+
+  const plannedEndDate = new Date(values.day);
+  const [hour, minute] = values.hour.split(":").map(Number);
+  plannedEndDate.setHours(hour, minute, 0, 0);
+
+  // Convert the Date object to an ISO string
+  const plannedEndDateISO = plannedEndDate.toISOString();
+
+  const { error: updateError } = await supabase
+    .from("tasks")
+    .update({
+      title: values.title,
+      priority: values.priority,
+      description: values.description,
+      planned_end_date: plannedEndDateISO, // ✅ Corrected
+    })
+    .eq("id", task_id)
+    .eq("user_id", user_id); // Ensure task belongs to user
+
+  if (updateError) {
+    return { error: updateError ,};
+  }
+
+  revalidatePath('/webapp/tasks')
+  return { success: "Task updated successfully" };
 }

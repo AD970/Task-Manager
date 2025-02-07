@@ -2,11 +2,11 @@
 import { OnCheckTask } from "@/_actions/task"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/hooks/use-toast"
+import useSelectTaskStore from "@/lib/store/useTaskStore"
 import { cn } from "@/lib/utils"
 import { Task } from "@/types"
 import { useState } from "react"
-import { FaFlag } from "react-icons/fa"
-
+import { Flag } from "lucide-react"
 type TaskItemProps = {
     task: Task,
     overdue ?: true
@@ -84,7 +84,11 @@ type TaskItemProps = {
       });
     }
   };
+    const {selectTask} = useSelectTaskStore();
 
+    function HandleSelectTask(){
+    selectTask(task.id)
+    }
     return(
       <div  className={cn("flex w-full items-center gap-2 ",)}> 
       <Checkbox
@@ -95,7 +99,7 @@ type TaskItemProps = {
           ? "destructive"
           : "default" // both low and medium default to "default"
       }
-    />      <div className={cn("border-b w-full flex justify-between items-center")}>
+    />      <div onClick={HandleSelectTask}  className={cn("border-b cursor-pointer w-full flex justify-between items-center")}>
         <h1>{task.title}</h1>
         <div className="flex gap-2">
         <span className={cn("text-sm  space-x-1",overdue ? 'text-red-500' : 'text-muted-foreground')}>

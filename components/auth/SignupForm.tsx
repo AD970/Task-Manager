@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { SignupSchema, TypeSignupSchema } from "@/schema/index";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -125,7 +124,7 @@ export default function SignupForm({
                 )}
               </Button>
               <Button variant="outline" className="w-full">
-                <FaGoogle className="mr-2" />
+               
                 Signup with Google
               </Button>
               <div className="mt-4 text-center text-sm">

@@ -6,7 +6,7 @@ import React, {
   useTransition,
 } from "react";
 import { Input } from "@/components/ui/input";
-import { Plus, ChevronDown, CalendarDays, ChevronRight } from "lucide-react";
+import { Plus, ChevronDown, CalendarDays, ChevronRight, Flag } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { FaFlag } from "react-icons/fa";
 import {
   Tooltip,
   TooltipContent,
@@ -49,6 +48,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { AddTask } from "@/_actions/task";
 import { useToast } from "@/hooks/use-toast";
+import { FaFlag } from "react-icons/fa6";
+import { priorities } from "@/constants";
 type Props = {
   setLoadingTask: Dispatch<SetStateAction<string>>;
 };
@@ -104,23 +105,7 @@ export default function TaskForm({ setLoadingTask }: Props) {
     });
   }
 
-  const priorities = [
-    {
-      value: "high",
-      name: "High Priority",
-      color: "text-red-500",
-    },
-    {
-      value: "medium",
-      name: "Medium Priority",
-      color: "text-yellow-500",
-    },
-    {
-      value: "low",
-      name: "Low Priority",
-      color: "text-muted",
-    },
-  ];
+
 
   const timeOptions = generateTimeOptions();
   return (
@@ -187,7 +172,7 @@ export default function TaskForm({ setLoadingTask }: Props) {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger>
-                                    <FaFlag className={cn(priority.color)} />
+                                    <FaFlag  className={cn(priority.color)} />
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>{priority.name}</p>
