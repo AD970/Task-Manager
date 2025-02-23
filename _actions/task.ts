@@ -31,6 +31,7 @@ export async function AddTask(values: TypeAddTaskSchema) {
     planned_end_date: plannedEndDateISO, // Use ISO string here
     description: values?.description,
     user_id: user_id,
+    project_id: values.project,
   };
 
   const { error } = await supabase.from("tasks").insert(insertedTask);
@@ -41,7 +42,11 @@ export async function AddTask(values: TypeAddTaskSchema) {
   revalidatePath("/webapp/tasks");
 }
 
-export async function OnCheckTask(task_id: number, task_checked: boolean) {
+export async function OnCheckTask(
+  task_id: number,
+  task_checked: boolean,
+  project_id: string,
+) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -63,10 +68,34 @@ export async function OnCheckTask(task_id: number, task_checked: boolean) {
     return { error: "Something went wrong, please try again" };
   }
 
-  // Revalidate the page so the UI updates
-  revalidatePath("/webapp/tasks");
+  const { data: tasks, error: tasksError } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("user_id", user_id)
+    .eq("project_id", project_id);
 
-  return { success: "Task completed" };
+  if (tasksError || !tasks) {
+    return { error: "Failed to fetch project tasks" };
+  }
+
+  if (project_id) {
+    const checkedTasks = tasks?.filter((task) => task.checked).length;
+    const totalTasks = tasks?.length || 1; // Avoid division by zero
+    const newProgress = (checkedTasks / totalTasks) * 100;
+
+    const { error: projectUpdateError } = await supabase
+      .from("projects")
+      .update({ progress: newProgress })
+      .eq("id", project_id);
+
+    if (projectUpdateError) {
+      return { error: "Failed to update project progress" };
+    }
+  }
+
+  // Revalidate the page so the UI updates
+  revalidatePath("/webapp", "layout");
+  return { success: "Task edited" };
 }
 
 export async function EditTask(task_id: number, values: TypeEditTaskSchema) {

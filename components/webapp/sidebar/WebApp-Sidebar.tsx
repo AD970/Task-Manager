@@ -6,6 +6,7 @@ import {
   CircleCheckBig,
   CalendarCheck,
   Settings2,
+  FolderRoot,
 } from "lucide-react";
 
 import {
@@ -39,6 +40,11 @@ const data = {
       title: "Calendar",
       url: "/webapp/calendar",
       icon: CalendarCheck,
+    },
+    {
+      title: "Projects",
+      url: "/webapp/projects",
+      icon: FolderRoot,
     },
     {
       title: "Settings",

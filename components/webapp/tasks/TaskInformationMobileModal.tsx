@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 export default function TaskInformationMobileModal({}: Props) {
-  return (
-    <div>TaskInformationMobileModal</div>
-  )
+  return <div>TaskInformationMobileModal</div>;
 }

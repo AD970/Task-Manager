@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import DashboardSection from "@/components/webapp/dashboard/DashboardSection";
 import { createClient } from "@/utils/supabase/server";
 import { Bell, MoreVertical, Share2 } from "lucide-react";
 import React from "react";
@@ -11,7 +12,7 @@ type Props = {};
 async function Hero() {
   return (
     <main className="grid gap-4 grid-cols-12 p-4">
-      <div className="md:col-span-4 bg-zinc-800 dark:bg-slate-400 p-4 rounded-lg">
+      <div className="md:col-span-4 space-y-4 bg-zinc-800 dark:bg-slate-400 p-4 rounded-lg">
         <div className="flex justify-between items-center">
           Overall information
           <div className="flex gap-4">
@@ -45,14 +46,16 @@ export default async function page({}: Props) {
     .eq("id", user_id)
     .single();
 
+  const { data: tasks } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("user_id", user_id);
   return (
     <div className="flex flex-col  min-h-screen">
       <div className="flex items-center px-4 py-3 justify-between ">
         <div className="flex gap-4 items-center ">
           <SidebarTrigger />
-          <h1 className="text-2xl  font-black ">
-            Hi, {profile?.display_name}!
-          </h1>
+          <h1 className="text-lg  font-bold ">Hi, {profile?.display_name}!</h1>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex gap-2">
@@ -63,7 +66,7 @@ export default async function page({}: Props) {
         </div>
       </div>
       <Separator />
-      <Hero />
+      <DashboardSection tasks={tasks} />
     </div>
   );
 }

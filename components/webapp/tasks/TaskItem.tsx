@@ -68,8 +68,7 @@ export function TaskItem({ task, overdue }: TaskItemProps) {
   const [checked, setChecked] = useState(task.checked); // Optimistic state
   const { toast } = useToast();
 
-
-   const [screenSize, setScreenSize] = useState({
+  const [screenSize, setScreenSize] = useState({
     isMobile: false,
     isTablet: false,
   });
@@ -88,11 +87,15 @@ export function TaskItem({ task, overdue }: TaskItemProps) {
     return () => window.removeEventListener("resize", updateScreenSize);
   }, []);
 
-  const { isMobile, isTablet } = screenSize
+  const { isMobile, isTablet } = screenSize;
   const handleCheck = async () => {
     setChecked((prev) => !prev); // Optimistic update
 
-    const response = await OnCheckTask(task.id, checked);
+    const response = await OnCheckTask(
+      task.id,
+      checked,
+      task?.project_id || "",
+    );
 
     if (response?.error) {
       toast({
@@ -110,8 +113,8 @@ export function TaskItem({ task, overdue }: TaskItemProps) {
 
   function HandleSelectTask() {
     selectTask(task.id);
-    if(isMobile || isTablet){
-      setIsOpen(true)
+    if (isMobile || isTablet) {
+      setIsOpen(true);
     }
   }
   return (
@@ -129,7 +132,11 @@ export function TaskItem({ task, overdue }: TaskItemProps) {
           "border-b cursor-pointer w-full flex justify-between items-center",
         )}
       >
-        <h1>{task.title}</h1>
+        <h1
+          className={`${task.checked === true ? "line-through text-muted-foreground " : ""}`}
+        >
+          {task.title}
+        </h1>
         <div className="flex gap-2">
           <span
             className={cn(
@@ -148,11 +155,13 @@ export function TaskItem({ task, overdue }: TaskItemProps) {
         </div>
       </div>
       {/* mobile dialog */}
-      {(isMobile || isTablet) &&  (
+      {(isMobile || isTablet) && (
         <Sheet onOpenChange={setIsOpen} open={isOpen}>
-          
           <SheetTitle />
-          <SheetContent side={isMobile ? 'top'  : 'right' } className="min-h-screen w-full">
+          <SheetContent
+            side={isMobile ? "top" : "right"}
+            className="min-h-screen w-full"
+          >
             <TaskInformationForm task={task} />
           </SheetContent>
         </Sheet>

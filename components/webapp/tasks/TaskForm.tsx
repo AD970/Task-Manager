@@ -56,8 +56,10 @@ import { AddTask } from "@/_actions/task";
 import { useToast } from "@/hooks/use-toast";
 import { FaFlag } from "react-icons/fa6";
 import { priorities } from "@/constants";
+import { Project } from "@/types";
 type Props = {
   setLoadingTask: Dispatch<SetStateAction<string>>;
+  projects: null | Project[];
 };
 
 const generateTimeOptions = () => {
@@ -72,7 +74,7 @@ const generateTimeOptions = () => {
   }
   return times;
 };
-export default function TaskForm({ setLoadingTask }: Props) {
+export default function TaskForm({ setLoadingTask, projects }: Props) {
   const [isPending, startTransition] = useTransition();
   const [descriptionCollapsible, setDescriptionCollapsible] = useState(false);
   const [error, setError] = useState<string | undefined>("");
@@ -91,6 +93,7 @@ export default function TaskForm({ setLoadingTask }: Props) {
       hour: "23:59",
       day: new Date(),
       description: "",
+      project: "",
     },
   });
   async function onSubmit(values: TypeAddTaskSchema) {
@@ -232,6 +235,55 @@ export default function TaskForm({ setLoadingTask }: Props) {
                     </CollapsibleContent>
                   </Collapsible>
                 </div>
+                {/* project */}
+                <Collapsible
+                  open={descriptionCollapsible}
+                  onOpenChange={setDescriptionCollapsible}
+                  className="mt-4"
+                >
+                  <div className="flex justify-between items-center">
+                    <p className="text-muted-foreground text-sm">Project</p>
+                    <CollapsibleTrigger asChild>
+                      <Button variant={"ghost"} size={"sm"}>
+                        <ChevronRight
+                          className={cn(
+                            "h-4 w-4 text-muted-foreground duration-300",
+                            descriptionCollapsible ? "rotate-90 " : "",
+                          )}
+                        />
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+
+                  <CollapsibleContent>
+                    <FormField
+                      control={form.control}
+                      name="project"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Add task to project" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {projects?.map((project) => (
+                                <SelectItem value={project.id} key={project.id}>
+                                  {project.title}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CollapsibleContent>
+                </Collapsible>
               </PopoverContent>
             </Popover>
 
@@ -253,7 +305,6 @@ export default function TaskForm({ setLoadingTask }: Props) {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={isDisabled}
                         />
                       </FormItem>
                     )}

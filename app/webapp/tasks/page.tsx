@@ -27,13 +27,19 @@ export default async function TaskPage({}: Props) {
   if (taskError) {
     console.log("something is off");
   }
+
+  const { data: projectData, error: projectError } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("user_id", user_id);
+
   return (
     <div className="grid grid-cols-12 max-h-screen">
       <div className="h-screen flex col-span-12  md:col-span-12 lg:col-span-8 flex-col gap-4 ">
         <div className="flex items-center p-4 border-b ">
           <h1>All tasks</h1>
         </div>
-        <TaskSection tasks={taskData} />
+        <TaskSection tasks={taskData} projects={projectData} />
       </div>
       <div className="border-l h-screen hidden sm:hidden lg:inline-block  lg:col-span-4">
         <TaskInformation />

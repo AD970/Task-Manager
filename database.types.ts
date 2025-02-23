@@ -30,6 +30,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      projects: {
+        Row: {
+          actual_end_date: string | null;
+          color: string | null;
+          created_at: string | null;
+          description: string | null;
+          id: string;
+          planned_end_date: string | null;
+          planned_start_date: string | null;
+          priority: string | null;
+          progress: number | null;
+          status: string | null;
+          title: string;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          actual_end_date?: string | null;
+          color?: string | null;
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          planned_end_date?: string | null;
+          planned_start_date?: string | null;
+          priority?: string | null;
+          progress?: number | null;
+          status?: string | null;
+          title: string;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          actual_end_date?: string | null;
+          color?: string | null;
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          planned_end_date?: string | null;
+          planned_start_date?: string | null;
+          priority?: string | null;
+          progress?: number | null;
+          status?: string | null;
+          title?: string;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       tasks: {
         Row: {
           actual_end_date: string | null;
@@ -40,6 +88,7 @@ export type Database = {
           planned_end_date: string | null;
           planned_start_date: string | null;
           priority: string | null;
+          project_id: string | null;
           title: string;
           updated_at: string | null;
           user_id: string;
@@ -53,6 +102,7 @@ export type Database = {
           planned_end_date?: string | null;
           planned_start_date?: string | null;
           priority?: string | null;
+          project_id?: string | null;
           title: string;
           updated_at?: string | null;
           user_id: string;
@@ -66,11 +116,20 @@ export type Database = {
           planned_end_date?: string | null;
           planned_start_date?: string | null;
           priority?: string | null;
+          project_id?: string | null;
           title?: string;
           updated_at?: string | null;
           user_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "tasks_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: {
