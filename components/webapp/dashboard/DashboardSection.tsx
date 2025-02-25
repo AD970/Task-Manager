@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Task } from "@/types";
 import { MoreVertical, Share2 } from "lucide-react";
@@ -9,10 +10,12 @@ type Props = {
 };
 
 function OverAllInformation({ tasks }: Props) {
-  const doneTasksCount = tasks?.filter((task) => task.checked === true).length;
+  const doneTasksCount = tasks?.filter((task) => task.checked).length || 0;
+    const totalTasks = tasks?.length || 0;
   const pendingTasksCount = tasks?.filter(
     (task) => task.checked === false,
   ).length;
+  const progress = totalTasks > 0 ? (doneTasksCount / totalTasks) * 100 : 0;
   return (
     <Card className="col-span-6 lg:col-span-4">
       <CardHeader className="">
@@ -45,6 +48,14 @@ function OverAllInformation({ tasks }: Props) {
           </div>
         </div>
       </CardContent>
+      <CardFooter>
+      <div className="flex flex-col  gap-2 w-full">
+              <p className="text-xs text-muted-foreground">
+                {Math.round(progress || 0)}% completed
+              </p>
+              <Progress value={progress} className="h-2" />
+            </div>
+      </CardFooter>
     </Card>
   );
 }
