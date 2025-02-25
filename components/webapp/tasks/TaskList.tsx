@@ -25,7 +25,6 @@ export default function TaskList({ tasks, loadingTask }: Props) {
   const [overdueTasksCollapsible, setOverdueTasksCollapsible] = useState(true);
 
   const importantTasks = tasks?.filter((task) => task.priority === "high");
-  console.log("important tasks are", importantTasks);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Start of today

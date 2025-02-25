@@ -27,7 +27,7 @@ type Props = {
 function AddProjectCard() {
   return (
     <div
-      className="col-span-4
+      className="col-span-12 sm:col-span-6 lg:col-span-4
      border-dashed rounded-lg border bg-card text-card-foreground shadow-sm flex gap-2 items-center justify-center  
      dark:hover:bg-secondary cursor-pointer duration-300  transition-colors
      "
@@ -98,7 +98,7 @@ function ProjectCardItem({ project }: ProjectCardItemProps) {
   return (
     <Card
       className={cn(
-        "col-span-4  ",
+         " col-span-12 sm:col-span-6 lg:col-span-4  ",
         project?.color && `bg-${project.color}-500/30`,
         // project?.priority === "high" && "border-destructive",
         // project?.priority === "low" && "border-muted-foreground"
