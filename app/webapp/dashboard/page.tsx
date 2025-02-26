@@ -46,10 +46,17 @@ export default async function page({}: Props) {
     .eq("id", user_id)
     .single();
 
-  const { data: tasks } = await supabase
+    const { data: tasks } = await supabase
     .from("tasks")
     .select("*")
     .eq("user_id", user_id);
+
+    const { data: projects } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("user_id", user_id);
+
+    
   return (
     <div className="flex flex-col  min-h-screen">
       <div className="flex items-center px-4 py-3 justify-between ">
@@ -66,7 +73,7 @@ export default async function page({}: Props) {
         </div>
       </div>
       <Separator />
-      <DashboardSection tasks={tasks} />
+      <DashboardSection projects={projects} tasks={tasks} />
     </div>
   );
 }

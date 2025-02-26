@@ -93,7 +93,7 @@ export default function TaskForm({ setLoadingTask, projects }: Props) {
       hour: "23:59",
       day: new Date(),
       description: "",
-      project: "",
+      project: null,
     },
   });
   async function onSubmit(values: TypeAddTaskSchema) {
@@ -263,7 +263,7 @@ export default function TaskForm({ setLoadingTask, projects }: Props) {
                         <FormItem>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            defaultValue={field.value || undefined}
                           >
                             <FormControl>
                               <SelectTrigger>

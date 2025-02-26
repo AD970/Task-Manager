@@ -31,12 +31,13 @@ export async function AddTask(values: TypeAddTaskSchema) {
     planned_end_date: plannedEndDateISO, // Use ISO string here
     description: values?.description,
     user_id: user_id,
-    project_id: values.project,
+    project_id: values.project || null,
   };
 
   const { error } = await supabase.from("tasks").insert(insertedTask);
 
   if (error) {
+    console.log("error is:",error)
     return { error: "Something went wrong" };
   }
   revalidatePath("/webapp/tasks");
@@ -54,8 +55,9 @@ export async function OnCheckTask(
   } = await supabase.auth.getUser();
 
   if (userError || !user?.id) {
-    return { error: "User not authenticated" }; // Don't redirect, just return an error
+    return redirect('/login')
   }
+
 
   const user_id = user.id;
 

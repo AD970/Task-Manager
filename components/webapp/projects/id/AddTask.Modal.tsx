@@ -16,13 +16,7 @@ import {
 import { useForm } from "react-hook-form";
 import { AddTaskSchema, TypeAddTaskSchema } from "@/schema/task";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Textarea } from "@/components/ui/textarea";
 import { AddTask } from "@/_actions/task";
 import { useToast } from "@/hooks/use-toast";

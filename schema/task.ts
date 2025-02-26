@@ -9,7 +9,7 @@ export const AddTaskSchema = z.object({
   day: z.date(),
   hour: z.string(),
   description: z.string(),
-  project: z.string(),
+  project: z.string().nullable(),
 });
 
 export type TypeAddTaskSchema = z.infer<typeof AddTaskSchema>;
