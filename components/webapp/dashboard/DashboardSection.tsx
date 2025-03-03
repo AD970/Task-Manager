@@ -36,12 +36,14 @@ export default function DashboardSection({ tasks,projects }: Props) {
 function OverAllInformation({ tasks,projects,className }: Props) {
   const doneTasksCount = tasks?.filter((task) => task.checked).length || 0;
     const totalTasks = tasks?.length || 0;
-  const pendingTasksCount = tasks?.filter(
+
+    const pendingTasksCount = tasks?.filter(
     (task) => task.checked === false,
   ).length;
+ 
   const progress = totalTasks > 0 ? (doneTasksCount / totalTasks) * 100 : 0;
-
-  const doneProjectsCount = projects?.filter((project) => project.actual_end_date === '').length || 0
+  
+  const doneProjectsCount = projects?.filter((project) => project.status === 'Completed').length || 0
   return (
     <Card className={cn("col-span-12 md:col-span-6 lg:col-span-4",className)}>
       <CardHeader className="">

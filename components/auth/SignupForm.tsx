@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { SignupSchema, TypeSignupSchema } from "@/schema/index";
@@ -22,7 +21,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { signupAction } from "@/_actions/auth";
 import { Loader2 } from "lucide-react";
 
@@ -31,7 +30,7 @@ export default function SignupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [isPending, startTransition] = useTransition();
-
+  const [error,setError] = useState('')
   const form = useForm<TypeSignupSchema>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -43,7 +42,11 @@ export default function SignupForm({
 
   async function onSubmit(data: TypeSignupSchema) {
     startTransition(async () => {
-      await signupAction(data);
+   const result =   await signupAction(data);
+
+   if(result.error){
+    setError(result.error)
+  }
     });
   }
 
@@ -123,15 +126,14 @@ export default function SignupForm({
                   "Signup"
                 )}
               </Button>
-              <Button variant="outline" className="w-full">
-                Signup with Google
-              </Button>
+            
               <div className="mt-4 text-center text-sm">
                 Already have an account?{" "}
                 <Link href="/login" className="underline underline-offset-4">
                   Login
                 </Link>
               </div>
+              <p className="text-destructive">{error && error}</p>
             </form>
           </Form>
         </CardContent>

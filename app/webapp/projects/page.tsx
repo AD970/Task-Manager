@@ -20,7 +20,7 @@ export default async function ProjectsPage({}: Props) {
   const { data: projectData, error: projectError } = await supabase
     .from("projects")
     .select("*")
-    .eq("user_id", user_id);
+    .eq("user_id", user_id).neq('status', 'Completed');
 
   if (projectError) {
     console.log("something is off");

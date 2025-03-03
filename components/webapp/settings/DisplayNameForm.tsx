@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { AddAvatar } from "@/_actions/user";
+import {  UpdateUsername } from "@/_actions/user";
+import { Profile } from '@/types';
 
 type Props = {
-    setOpen: Dispatch<SetStateAction<boolean>>
+  profile: Profile
 }
 
-export default function AvatarForm({setOpen}: Props) {
+export default function DisplayNameForm({profile}: Props) {
   const { toast } = useToast();
   const [pending, setPending] = React.useState(false);
 
@@ -20,7 +21,7 @@ export default function AvatarForm({setOpen}: Props) {
     const formData = new FormData(e.currentTarget);
     try {
       setPending(true);
-      const result = await AddAvatar(formData); // Pass FormData to AddAvatar
+      const result = await UpdateUsername(formData); // Pass FormData to AddAvatar
       if(result.error){
         toast({
           title: "Upload failed",
@@ -29,29 +30,33 @@ export default function AvatarForm({setOpen}: Props) {
         });
       } else {
         toast({
-          title: "Upload successful",
-          description: "Your profile picture has been updated."
+          title: "Updated successfully!",
+          description: "Your profile has been updated."
         });
       }
     } catch (error) {
       console.error('Something went wrong', error);
       toast({
-        title: "Upload failed",
-        description: "There was an error uploading your profile picture",
+        title: "Update failed",
+        description: "There was an error Updating your profile.",
         variant: "destructive"
       });
     } finally {
       setPending(false);
-      setOpen(false)
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Label>Image</Label>
-      <Input name="avatar" type="file" accept="image/*" />
+      <div className="grid gap-4">
+              <div className="grid gap-2">
+                
+                <Label htmlFor="display_name">Username</Label>
+                <Input id="display_name" name='display_name' placeholder={profile.display_name || 'Enter your username'} />
+              </div>
+            </div>
       <Button type="submit" disabled={pending}>
-        {pending ?  "Uploading..." : "Submit"}
+        {pending ?  "Saving..." : "Save Changes"}
       </Button>
     </form>
   );

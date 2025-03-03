@@ -5,6 +5,7 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  Github,
   LogOut,
   Sparkles,
 } from "lucide-react";
@@ -26,12 +27,37 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Profile } from "@/types";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DialogContent } from "@radix-ui/react-dialog";
+import { signOutAction } from "@/_actions/auth";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 type Props = {
   profile: Profile;
 };
 export function NavUser({ profile }: Props) {
   const { isMobile } = useSidebar();
+  const [pending,setPending] = useState(false)
+  const {toast} = useToast();
+  async function HandleSubmit(){
+
+    try {
+      setPending(true)
+      await signOutAction();
+    } catch (error) {
+    console.log(error)      
+      toast({
+        title: 'Something went wrong!',
+        variant: 'destructive'
+      })
+  }finally{
+      setPending(false)
+    
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -81,30 +107,63 @@ export function NavUser({ profile }: Props) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
+              <DropdownMenuItem className="flex cursor-pointer gap-2 items-center">
+                <Sparkles  />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
+                <Link className="flex gap-2 items-center" href='settings'>
+                <BadgeCheck className="" />
                 Account
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
+              <Link className="cursor-pointer" href={'/github.com/AD970'}>
+              <DropdownMenuItem className=" cursor-pointer flex gap-2 items-center">
+                <Github />
+                My Github Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem className="flex cursor-pointer gap-2 items-center">
                 <Bell />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOut />
-              Log out
+                <Button onClick={HandleSubmit} type="submit" >
+
+<LogOut />
+Log out
+</Button>
+              {/* <Dialog>
+                <DialogTrigger asChild>
+                </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        Logout
+                      </DialogTitle>
+                      <DialogDescription>
+                        Are you sure you want to logout?
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <DialogFooter>
+
+                  <div className="flex items-center justify-end gap-4">
+                    <DialogClose asChild>
+                      <Button type="button">Close</Button>
+                    </DialogClose>
+                    <Button  variant={'destructive'}>Logout</Button>
+                  </div>
+                  
+                    </DialogFooter>
+                  </DialogContent>
+              </Dialog> */}
+       
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

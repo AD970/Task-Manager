@@ -1,5 +1,5 @@
 "use client";
-import { GalleryVerticalEnd, Loader2 } from "lucide-react";
+import {  Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { loginAction } from "@/_actions/auth";
 import { TypeLoginSchema, LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import {
   Form,
@@ -31,6 +30,8 @@ export default function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [isPending, startTransition] = useTransition();
+  const [error,setError] = useState('')
+
   const form = useForm<TypeLoginSchema>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -41,7 +42,10 @@ export default function LoginForm({
 
   async function onSubmit(data: TypeLoginSchema) {
     startTransition(async () => {
-      await loginAction(data);
+      const result = await loginAction(data);
+      if(result.error){
+        setError(result.error)
+      }
     });
   }
 
@@ -49,9 +53,8 @@ export default function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Signup</CardTitle>
+          <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Create an account to use this website
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -103,15 +106,14 @@ export default function LoginForm({
                   "Login"
                 )}
               </Button>
-              <Button variant="outline" className="w-full">
-                Login with Google
-              </Button>
+         
               <div className="mt-4 text-center text-sm">
                 Don't have an account?{" "}
                 <Link href="/sign-up" className="underline underline-offset-4">
                   Sign Up
                 </Link>
               </div>
+              <p className="text-destructive">{error}</p>
             </form>
           </Form>
         </CardContent>

@@ -12,10 +12,10 @@ export default function Navbar({}: Props) {
         <h1 className="text-2xl font-bold">Logo</h1>
       </div>
       <div className="flex gap-8 items-center">
-        <Link className="" href={"/feature"}>
+        {/* <Link className="" href={"/feature"}>
           Feature
-        </Link>
-        <Link href={"/sign-in"}>Sign In</Link>
+        </Link> */}
+        <Link href={"/login"}>Login</Link>
 
         <Button asChild variant={"outline"}>
           <Link href={"/sign-up"}>Sign Up</Link>

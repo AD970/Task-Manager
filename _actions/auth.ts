@@ -24,9 +24,9 @@ export const signupAction = async (values: TypeSignupSchema) => {
 
   if (error) {
     console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
+    return {error: error.message}
   } else {
-    return redirect("/dashboard");
+    return redirect("/webapp/dashboard");
   }
 };
 
@@ -39,8 +39,16 @@ export const loginAction = async (values: TypeLoginSchema) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/login", error.message);
+    console.error(error.code + " " + error.message);
+
+    return {error: error.message}
   }
 
   return redirect("/webapp/dashboard");
+};
+
+export const signOutAction = async () => {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  return redirect("/login");
 };

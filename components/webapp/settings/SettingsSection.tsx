@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -14,6 +13,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { quotes } from "@/data/quotes"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import AvatarForm from "./AvatarForm"
+import DisplayNameForm from "./DisplayNameForm"
 type Props = {
     profile: Profile
 }
@@ -24,8 +24,9 @@ type Quote = {
 };
 
 
-export default function SettingsPage({profile}:Props) {
+export default function SettingsSection({profile}:Props) {
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     function getRandomQuote() {
@@ -51,7 +52,7 @@ export default function SettingsPage({profile}:Props) {
                 <AvatarImage src={profile.avatar_url ||"/placeholder.svg"} alt="Avatar" />
                 <AvatarFallback>UN</AvatarFallback>
               </Avatar>
-              <Dialog>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
 
               <Button size="icon" variant="secondary" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full">
@@ -65,7 +66,7 @@ export default function SettingsPage({profile}:Props) {
                       Add Avatar
                     </DialogTitle>
                   </DialogHeader>
-                  <AvatarForm />
+                  <AvatarForm setOpen={setOpen} />
                   </DialogContent> 
               </Dialog>
             </div>
@@ -78,16 +79,7 @@ export default function SettingsPage({profile}:Props) {
 
           <Separator />
           {/* User Info Form */}
-          <form className="space-y-4">
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
-                <Input id="username" placeholder="Enter username" />
-              </div>
-            </div>
-
-            <Button>Save Changes</Button>
-          </form>
+      <DisplayNameForm profile={profile} />
 
           <Separator />
 

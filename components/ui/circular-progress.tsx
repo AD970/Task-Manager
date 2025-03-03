@@ -60,7 +60,7 @@ export default function CircularProgress({
       </svg>
 
       {/* Optional: Add text in the center */}
-      <div className="absolute text-xs text-white font-medium">{currentProgress}%</div>
+      <div className="absolute text-xs text-black dark:text-white font-medium">{currentProgress}%</div>
     </div>
   )
 }

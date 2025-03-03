@@ -1,6 +1,7 @@
-'user server';
+"use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { error } from "console";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,15 +35,7 @@ export async function AddAvatar(formData:FormData){
   .eq("id", userId)
   .single();
 
-// if (profile?.avatar_url) {
-//   // Derive the storage path from avatar_url if needed
-//   const oldFilePath = profile.avatar_url
-//   // Delete the existing file
-//   await supabase.storage.from("avatars").remove([oldFilePath]);
-// }
-
-
-const filePath = `avatars/${userId}/${Date.now()}-${file.name}`;
+  const filePath = `${userId}/${uuidv4()}-${file.name}`;
 
 const { error: uploadError } = await supabase.storage
   .from("avatars")
@@ -56,10 +49,7 @@ if (uploadError) {
 const { data: publicUrlData } = supabase.storage
   .from("avatars")
   .getPublicUrl(filePath);
-// if (urlError) {
-//   console.error("Get Public URL Error:", urlError.message);
-//   return { error: urlError.message };
-// }
+
 const avatarUrl = publicUrlData.publicUrl;
 
 const { error: updateError } = await supabase
@@ -77,4 +67,37 @@ revalidatePath("/");
 return { success: "Avatar updated successfully", avatarUrl };
 
   
+}
+
+export async function UpdateUsername(formData:FormData){
+    const display_name = formData.get('display_name') as string
+
+    if(!display_name){
+        return {error: 'Please fill the field'}
+    }
+    const supabase = await createClient();
+  
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+  
+    if (userError || !user?.id) {
+        
+      return { error: "User not authenticated." };
+    }
+    const userId = user.id;
+
+    const { data: profile, error: updateError } = await supabase
+  .from("profiles").update({'display_name':display_name}).eq('id',userId)
+    if(updateError){
+        console.error("Profile Update Error:", updateError.message);
+        return {error: updateError.message}
+    }
+
+    
+  revalidatePath("/");
+  return { success: "Username updated successfully", display_name };
+
+
 }

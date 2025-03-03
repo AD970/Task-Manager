@@ -1,6 +1,8 @@
 import React from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import "./styles.css";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 type Props = {};
 
 export default function Landing({}: Props) {
@@ -12,11 +14,10 @@ export default function Landing({}: Props) {
           Join millions of people to capture ideas, organize life, and do
           something creative.
         </p>
-        <Button size={"wide"} className="mt-6 px-16" variant={"outline"}>
+        <Link href={'/login'}  className={cn("mt-6 px-16",buttonVariants({variant: 'outline',size: 'wide'}))}>
           Get Started
-        </Button>
+        </Link>
       </div>
-      <div className="colorDot"></div>
     </div>
   );
 }

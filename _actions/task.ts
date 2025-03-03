@@ -70,6 +70,7 @@ export async function OnCheckTask(
     return { error: "Something went wrong, please try again" };
   }
 
+  if (project_id ) {
   const { data: tasks, error: tasksError } = await supabase
     .from("tasks")
     .select("*")
@@ -80,7 +81,6 @@ export async function OnCheckTask(
     return { error: "Failed to fetch project tasks" };
   }
 
-  if (project_id) {
     const checkedTasks = tasks?.filter((task) => task.checked).length;
     const totalTasks = tasks?.length || 1; // Avoid division by zero
     const newProgress = (checkedTasks / totalTasks) * 100;

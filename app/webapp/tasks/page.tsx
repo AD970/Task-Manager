@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import TaskSection from "@/components/webapp/tasks/TaskSection";
 import TaskInformation from "@/components/webapp/tasks/TaskInformation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-// import TaskInformation from "@/components/webapp/tasks/TaskInformation";
 type Props = {};
 
 export default async function TaskPage({}: Props) {
