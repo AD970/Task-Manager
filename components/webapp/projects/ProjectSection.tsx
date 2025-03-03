@@ -20,6 +20,7 @@ import { TaskItem } from "../tasks/TaskItem";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 type Props = {
   projects: Project[] | null;
 };
@@ -35,7 +36,7 @@ function AddProjectCard() {
       <Dialog>
         <DialogTrigger>
           <div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 min-h-56 items-center">
               <Plus className="" />
               <h1 className="text-2xl">Add Project</h1>
             </div>
@@ -94,7 +95,6 @@ function ProjectCardItem({ project }: ProjectCardItemProps) {
     fetchProject();
   }, []);
 
-  console.log("color is:", project?.color);
   return (
     <Card
       className={cn(
@@ -172,7 +172,7 @@ function ProjectCardItem({ project }: ProjectCardItemProps) {
                 >
                   View More
                 </Link>
-              ) : tasks === null ? (
+              ) : tasks && tasks.length <= 0 ? (
                 <div className="">Please add some Tasks</div>
               ) : (
                 <></>
@@ -180,11 +180,20 @@ function ProjectCardItem({ project }: ProjectCardItemProps) {
             </div>
             <h4 className="text-muted-foreground ">{project?.description}</h4>
 
-            {tasks?.slice(0, 5).map((task) => (
+            {tasks?.slice(0, 4).map((task) => (
               <div key={task.id} className="">
                 <TaskItem task={task} />
               </div>
             ))}
+            {Array.from({ length: Math.max(4 - (tasks?.length || 0), 0) }).map((_, index) => (
+  <div key={index} className={cn("flex w-full items-center gap-2")}>
+    <Checkbox disabled />
+    <div className="border-b w-full">
+      <div className="h-6"></div>
+    </div>
+  </div>
+))}
+
           </CardContent>
           <CardFooter>
             <div className="flex flex-col  gap-2 w-full">

@@ -1,4 +1,5 @@
 'use client'
+import { formatTaskDate } from '@/constants';
 import React, { useState } from 'react'
 import { createClient } from "@/utils/supabase/server";
 import {
@@ -27,6 +28,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleCheckBig,
+  Edit,
   List,
   ListFilterPlus,
   Plus,
@@ -45,7 +47,10 @@ import { OnCheckTask } from '@/_actions/task';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogHeader,DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import AddTaskModal from './AddTask.Modal';
-
+import MobileTaskList from './mobile/MobileTaskList';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { TooltipContent } from '@radix-ui/react-tooltip';
+import TaskInformationForm from '../../tasks/TaskInformationForm';
 type Props = {}
 
 export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[] | null,project_id:string }) {
@@ -64,7 +69,9 @@ export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[
 
    if(isMobile){
     return(
-        <div className=""></div>
+        <div className="">
+          <MobileTaskList tasks={tasks} project_id={project_id} search={search} setSearch={setSearch} inProgressTasks={inProgressTasks || null} completedTasks={completedTasks || null} />
+        </div>
     )
    }
     return (
@@ -143,6 +150,7 @@ export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[
     
     return(
       <div className="">
+        {/* in progress */}
       <Collapsible className='space-y-4'
       onOpenChange={setInProgressTasksCollapsible}
       open={inProgressTasksCollapsible}
@@ -247,7 +255,7 @@ export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[
               <TableHead>
                 {" "}
                 <div className="flex items-center gap-2">
-                  <Text className="h-4 w-4" /> Description
+                  <Text className="h-4 w-4" />  Description
                 </div>
               </TableHead>
               <TableHead>
@@ -278,37 +286,7 @@ export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[
 
   function TaskItem({task}: {task:Task}){
 
-    function formatTaskDate(dateString: string): string {
-      const date = new Date(dateString);
-      const today = new Date();
-      const now = new Date();
-      today.setHours(0, 0, 0, 0); // Today at midnight
-    
-      // Tomorrow starts exactly one day after today
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-    
-      // Day after tomorrow is two days after today
-      const dayAfterTomorrow = new Date(today);
-      dayAfterTomorrow.setDate(today.getDate() + 2);
-    
-      if (date < now) {
-        return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      }
-      if (date >= today && date < tomorrow) {
-        // Task is scheduled for today: include the time
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        return ` ${hours}:${minutes}`;
-      } else if (date >= tomorrow && date < dayAfterTomorrow) {
-        // Task is scheduled for tomorrow
-        return "Tomorrow";
-      } else {
-        // Otherwise, format as "Mon DD"
-        return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      }
-    }
-
+  
     const [checked,setChecked] = useState(task.checked);
     const {toast} = useToast();
     const handleCheck = async () => {
@@ -338,7 +316,20 @@ export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[
         <Checkbox checked={checked} onCheckedChange={handleCheck}
  />
       </TableCell>
-      <TableCell>{task.title}</TableCell>
+      <TableCell>
+        {/* <TooltipProvider>
+          
+        <Tooltip>
+          <TooltipTrigger>{task.title}</TooltipTrigger>
+          <TooltipContent>
+            <Button c variant={'outline'} >
+            Edit
+            <Edit className='h-4 w-4'/>
+            </Button>
+          </TooltipContent>
+        </Tooltip> 
+        </TooltipProvider> */}
+        </TableCell>
       <TableCell className='text-xs dark:text-gray-300 text-gray-700'>{task.description || "-"}</TableCell>
       <TableCell>{task.planned_end_date && formatTaskDate(task.planned_end_date  )}</TableCell>
       <TableCell>
@@ -349,6 +340,26 @@ export default function ProjectTasksSection({ tasks,project_id }: { tasks: Task[
           task?.priority?.slice(1)}
           </div>
       </TableCell>
+      <TableCell>
+        <Dialog>
+          <DialogTrigger asChild>
+          <Button size={'icon'} variant={'ghost'}>
+          
+          <Edit className='h-4 w-4'/>
+            </Button>
+    
+          </DialogTrigger>
+          <DialogContent className={"lg:max-w-screen-lg overflow-y-scroll max-h-screen"}>
+            <DialogHeader>
+              <DialogTitle>Edit Task</DialogTitle>
+            </DialogHeader>
+            <TaskInformationForm task={task} />
+          </DialogContent>
+        </Dialog>
+       
+      </TableCell>
     </TableRow>
     )
   }
+
+

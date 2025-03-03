@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,24 +24,14 @@ import { EditTask } from "@/_actions/task";
 import { useToast } from "@/hooks/use-toast";
 import useSelectTaskStore from "@/lib/store/useTaskStore";
 import { EditTaskSchema, TypeEditTaskSchema } from "@/schema/task";
-import { createClient } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
+
 import React, { startTransition, useEffect, useTransition } from "react";
 import { priorities } from "@/constants";
 import {
-  Plus,
-  ChevronDown,
-  CalendarDays,
-  ChevronRight,
-  Flag,
+
   LoaderCircle,
 } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Tooltip,
@@ -49,17 +39,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Calendar } from "@/components/ui/calendar";
 import { FaFlag } from "react-icons/fa6";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import { DateTimePickerNoPopver } from "@/components/ui/DateTimePicker-rdsx-NoPopover";
+import { DateTimePicker } from "@/components/ui/DateTimePicker-rdsx";
+
+import { useIsMobile } from "@/hooks/use-mobile";
 type Props = {
   task: Task;
+  setIsOpen?: Dispatch<SetStateAction<boolean>>
 };
 
 const generateTimeOptions = () => {
@@ -75,7 +63,7 @@ const generateTimeOptions = () => {
   return times;
 };
 
-export default function TaskInformationForm({ task }: Props) {
+export default function TaskInformationForm({ task,setIsOpen }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const { toast } = useToast();
@@ -103,7 +91,7 @@ export default function TaskInformationForm({ task }: Props) {
       description: task?.description || "",
     },
   });
-
+  const isMobile = useIsMobile()
   async function onSubmit(values: TypeEditTaskSchema) {
     startTransition(async () => {
       await EditTask(task_id, values).then((data) => {
@@ -120,23 +108,12 @@ export default function TaskInformationForm({ task }: Props) {
           description: data.success,
         });
         selectTask(null);
+     setIsOpen &&   setIsOpen(false)
       });
     });
   }
 
-  // useEffect(() => {
-  //   if (task) {
-  //     form.reset({
-  //       title: task.title || '',
-  //       priority: task.priority || 'medium',
-  //       hour: task.planned_end_date
-  //         ? new Date(task.planned_end_date).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
-  //         : "",
-  //       day: task.planned_end_date ? new Date(task.planned_end_date) : undefined,
-  //       description: task.description || '',
-  //     });
-  //   }
-  // }, [task, form,useSelectTaskStoreId]);
+
   return (
     <div>
       {/* title */}
@@ -214,62 +191,37 @@ export default function TaskInformationForm({ task }: Props) {
           />
 
           {/* calendar */}
-          <div className="">
+          {isMobile ? (
+  <FormField
+  control={form.control}
+  name="day"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Time</FormLabel>
+      <FormControl>
+        <DateTimePickerNoPopver />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+          ): (
             <FormField
-              control={form.control}
-              name="day"
-              render={({ field }) => (
-                <FormItem>
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={isDisabled}
-                  />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="flex items-center  justify-between">
-            <FormField
-              control={form.control}
-              name="hour"
-              render={({ field }) => (
-                <FormItem className="mt-4">
-                  <FormControl>
-                    <Input {...field} type="time" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            control={form.control}
+            name="day"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Time</FormLabel>
+                <FormControl>
+                  <DateTimePicker />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />          )}
+       
 
-            <FormField
-              control={form.control}
-              name="hour"
-              render={({ field }) => (
-                <FormItem className="mt-4">
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Time" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeOptions.map((time) => (
-                          <SelectItem key={time} value={time}>
-                            {time}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <Button className="w-full" type="submit">
+          <Button disabled={isPending} className="w-full" type="submit">
             {isPending ? (
               <div className="flex items-center  gap-2">
                 <LoaderCircle className="h-4 w-4 animate-spin" />{" "}

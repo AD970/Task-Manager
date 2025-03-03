@@ -160,7 +160,7 @@ export function TaskItem({ task, overdue }: TaskItemProps) {
           <SheetTitle />
           <SheetContent
             side={isMobile ? "top" : "right"}
-            className="min-h-screen w-full"
+            className="max-h-screen min-h-screen w-full overflow-y-scroll"
           >
             <TaskInformationForm task={task} />
           </SheetContent>

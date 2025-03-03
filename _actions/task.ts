@@ -97,7 +97,7 @@ export async function OnCheckTask(
 
   // Revalidate the page so the UI updates
   revalidatePath("/webapp", "layout");
-  return { success: "Task edited" };
+  return { success: task_checked ? 'Check Mark Have Been Removed Successfully'  : 'Task Have Been Finished Successfully' }
 }
 
 export async function EditTask(task_id: number, values: TypeEditTaskSchema) {

@@ -2,6 +2,7 @@ import ProjectSection from "@/components/webapp/projects/ProjectSection";
 import React from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 type Props = {};
 
 export default async function ProjectsPage({}: Props) {
@@ -26,7 +27,9 @@ export default async function ProjectsPage({}: Props) {
   }
   return (
     <div className="max-h-screen min-h-screen overflow-y-auto">
-      <div className="p-4 border-b flex items-center">
+      <div className="p-4 gap-2 border-b flex items-center">
+      <SidebarTrigger className="sm:hidden" />
+
         <h1>My Projects</h1>
       </div>
       <ProjectSection projects={projectData} />

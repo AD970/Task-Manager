@@ -35,6 +35,10 @@ import { Input } from "@/components/ui/input";
 import { Task } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import ProjectTasksSection from "@/components/webapp/projects/id/Project.TasksSection";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import FinishProject from "@/components/webapp/projects/id/FinishProject";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 type Props = {
   params: string;
 };
@@ -61,9 +65,14 @@ export default async function ProjectPage({
     .select("*")
     .eq("project_id", id);
 
+    const checkedTasks = tasks?.filter((task) => task.checked).length;
+    const totalTasks = tasks?.length || 1; // Avoid division by zero
+   
   return (
     <div className="">
-      <div className="p-4 border-b">
+      <div className="p-4 flex gap-4 items-center border-b">
+      <SidebarTrigger className="sm:hidden" />
+
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -86,10 +95,7 @@ export default async function ProjectPage({
 
           {/* users */}
           <div className="">
-            <Button>
-              <UserPlus />
-              Invite
-            </Button>
+         <FinishProject active={checkedTasks && totalTasks >  checkedTasks  ? true : false}  project_id={project.id} />
           </div>
         </div>
       <ProjectTasksSection tasks={tasks} project_id={project.id}/>

@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import TaskSection from "@/components/webapp/tasks/TaskSection";
 import TaskInformation from "@/components/webapp/tasks/TaskInformation";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 // import TaskInformation from "@/components/webapp/tasks/TaskInformation";
 type Props = {};
 
@@ -36,7 +37,8 @@ export default async function TaskPage({}: Props) {
   return (
     <div className="grid grid-cols-12 max-h-screen">
       <div className="h-screen flex col-span-12  md:col-span-12 lg:col-span-8 flex-col gap-4 ">
-        <div className="flex items-center p-4 border-b ">
+        <div className="flex gap-2 items-center p-4 border-b ">
+          <SidebarTrigger className="sm:hidden" />
           <h1>All tasks</h1>
         </div>
         <TaskSection tasks={taskData} projects={projectData} />

@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { AddTaskSchema, TypeAddTaskSchema } from "@/schema/task";
+import { EditProjectSchema, TypeEditProjectSchema } from "@/schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
@@ -38,61 +38,72 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Textarea } from "@/components/ui/textarea";
-import { AddTask } from "@/_actions/task";
+import { EditProject } from "@/_actions/project";
 import { useToast } from "@/hooks/use-toast";
 import { FaFlag } from "react-icons/fa6";
 import { priorities } from "@/constants";
 import { DateTimePicker } from "@/components/ui/DateTimePicker-rdsx";
 import { Input } from "@/components/ui/input";
-import { useState, useTransition } from "react";
-import { AddProjectSchema, TypeAddProjectSchema } from "@/schema/project";
+import { useState, useTransition, useEffect } from "react";
 import { DialogClose } from "@/components/ui/dialog";
-import { AddProject } from "@/_actions/project";
 import { LoaderCircle } from "lucide-react";
-import { ColorPicker } from "./ColorPickerForm";
-type Props = {};
+import { parseISO } from "date-fns";
 
-export default function AddProjectForm({}: Props) {
+type EditProjectFormProps = {
+  project: {
+    id: string;
+    title: string;
+    description?: string;
+    planned_end_date: string;
+    priority: string;
+    color: string;
+  };
+  onClose?: () => void;
+};
+
+export default function EditProjectForm({ project, onClose }: EditProjectFormProps) {
   const [isPending, startTransition] = useTransition();
-
   const [error, setError] = useState<string | undefined>("");
   const { toast } = useToast();
 
-  const form = useForm<TypeAddProjectSchema>({
-    resolver: zodResolver(AddProjectSchema),
+  // Parse the ISO date string to a Date object
+  const plannedDate = project.planned_end_date ? parseISO(project.planned_end_date) : new Date();
+
+  const form = useForm<TypeEditProjectSchema>({
+    resolver: zodResolver(EditProjectSchema),
     defaultValues: {
-      title: "",
-      day: new Date(),
-      description: "",
-      color: "normal",
-      priority: "medium",
+      title: project.title || "",
+      day: plannedDate,
+      description: project.description || "",
+      priority: project.priority || "medium",
     },
   });
 
-  async function onSubmit(values: TypeAddProjectSchema) {
-    console.log(values);
-
-    form.reset();
+  async function onSubmit(values: TypeEditProjectSchema) {
     startTransition(async () => {
-      await AddProject(values).then((data) => {
-        if (data?.error) {
-          setError(data?.error);
-          toast({
-            title: "Uh oh! Something went wrong.",
-            description: "There was a problem with your request.",
-          });
-        } else if (data?.success) {
-          toast({
-            title: data.success,
-          });
-        }
-      });
+       await EditProject(project.id, values).then((data) => {
+            if (data?.error) {
+                setError(data?.error);
+                toast({
+                    title: "Uh oh! Something went wrong.",
+                    description: "There was a problem with your request.",
+                });
+            } else if (data?.success) {
+                toast({
+                    title: data.success,
+                });
+                if (onClose) {
+                    onClose();
+                }
+            }
+        });
     });
   }
+
   return (
     <Form {...form}>
       <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-        {/* Task Title */}
+        {/* Project Title */}
         <FormField
           control={form.control}
           name="title"
@@ -103,7 +114,7 @@ export default function AddProjectForm({}: Props) {
                 <Input
                   {...field}
                   type="text"
-                  placeholder="Add Project"
+                  placeholder="Edit Project"
                   autoComplete="off"
                 />
               </FormControl>
@@ -161,8 +172,7 @@ export default function AddProjectForm({}: Props) {
           )}
         />
 
-       
-
+      
         <FormField
           control={form.control}
           name="day"
@@ -185,12 +195,11 @@ export default function AddProjectForm({}: Props) {
           <Button type="submit" disabled={isPending} variant={"default"}>
             {isPending ? (
               <div className="flex items-center gap-2">
-                {" "}
-                <LoaderCircle className="animate-spin" />{" "}
-                <span>Adding Project</span>
+                <LoaderCircle className="animate-spin" />
+                <span>Updating Project</span>
               </div>
             ) : (
-              "Add Project"
+              "Update Project"
             )}
           </Button>
         </div>

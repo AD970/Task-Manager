@@ -37,15 +37,11 @@ const data = {
       icon: CircleCheckBig,
     },
     {
-      title: "Calendar",
-      url: "/webapp/calendar",
-      icon: CalendarCheck,
-    },
-    {
       title: "Projects",
       url: "/webapp/projects",
       icon: FolderRoot,
     },
+
     {
       title: "Settings",
       url: "/webapp/settings",
@@ -65,7 +61,6 @@ export function AppSidebar({
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter></SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

@@ -10,28 +10,30 @@ import { parseISO } from "date-fns";
 import { WeeklyProgressChart } from "@/components/charts/pie/WeeklyProgressChart";
 import CircularProgress from "@/components/ui/circular-progress";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type Props = {
   tasks: Task[] | null;
-  projects: Project[] | null
+  projects: Project[] | null;
+  className?: string
 };
 
 export default function DashboardSection({ tasks,projects }: Props) {
   const weeklyProgress = tasks ? calculateProgress(tasks ,'week') : 0
   console.log('week progress is :',weeklyProgress)
   return (
-    <div className=" grid grid-cols-12  gap-4 p-4 py-4 ">
+    <div className=" grid grid-cols-12    gap-4 p-4 py-4 ">
       {/* over all tasks */}
-      <OverAllInformation projects={projects} tasks={tasks} />
-      <MonthlyProgressCard weeklyProgress={Math.floor(weeklyProgress)} />
-      <CalendarCard tasks={tasks} />
-      <ProjectsSection projects={projects} />
+      <OverAllInformation projects={projects} tasks={tasks} className=" lg:order-1 order-1"  />
+      <WeeklyProgressCard weeklyProgress={Math.floor(weeklyProgress)} className="lg:order-2 order-3" />
+      <CalendarCard tasks={tasks} className="order-2 lg:order-3" />
+      <ProjectsSection projects={projects} className="order-4 lg:order-4"  />
     </div>
   );
 }
 
 
-function OverAllInformation({ tasks,projects }: Props) {
+function OverAllInformation({ tasks,projects,className }: Props) {
   const doneTasksCount = tasks?.filter((task) => task.checked).length || 0;
     const totalTasks = tasks?.length || 0;
   const pendingTasksCount = tasks?.filter(
@@ -41,7 +43,7 @@ function OverAllInformation({ tasks,projects }: Props) {
 
   const doneProjectsCount = projects?.filter((project) => project.actual_end_date === '').length || 0
   return (
-    <Card className="col-span-6 lg:col-span-4">
+    <Card className={cn("col-span-12 md:col-span-6 lg:col-span-4",className)}>
       <CardHeader className="">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg">Overall Information</CardTitle>
@@ -117,7 +119,7 @@ function OverAllInformation({ tasks,projects }: Props) {
     </Card>
   );
 }
-function CalendarCard({tasks}: {tasks: Task[] | null}){
+function CalendarCard({tasks,className}: {tasks: Task[] | null, className?: string}){
   const unFinishedTasks = tasks?.filter((task) => task.checked === false)
   const taskDates = unFinishedTasks
     ?.map((task) => task.planned_end_date) // ✅ Extract task dates
@@ -127,7 +129,7 @@ function CalendarCard({tasks}: {tasks: Task[] | null}){
     const today = new Date();
     
   return(
-    <Card className=" col-span-6  lg:col-span-4 ">
+    <Card className={cn("col-span-12 md:col-span-6 lg:col-span-4",className)}>
    <CardHeader className="">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg">Calendar </CardTitle>
@@ -147,7 +149,7 @@ function CalendarCard({tasks}: {tasks: Task[] | null}){
           taskDays: taskDates || [], // ✅ Mark task days
         }}
         modifiersClassNames={{
-          taskDays: "bg-primary text-white rounded-full", // ✅ Highlighted day styles  
+          taskDays: "bg-secondary dark:text-primary  text-secondary-foreground  rounded-full", // ✅ Highlighted day styles  
 
         }}
         className="p-2  "
@@ -157,11 +159,11 @@ function CalendarCard({tasks}: {tasks: Task[] | null}){
   )
 }
 
-function MonthlyProgressCard({weeklyProgress}: {weeklyProgress:number}){
+function WeeklyProgressCard({weeklyProgress,className}: {weeklyProgress:number,className?:string}){
 
 
   return(
-    <Card className="col-span-4">
+    <Card className={cn("col-span-12 lg:col-span-4",className)}>
        <CardHeader className="">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg">Weekly Tasks Progress</CardTitle>
@@ -171,26 +173,40 @@ function MonthlyProgressCard({weeklyProgress}: {weeklyProgress:number}){
           </div>
         </div>
       </CardHeader>
+      <div className="py-4">
+
       <WeeklyProgressChart weeklyProgress={weeklyProgress} />
+      </div>
     </Card>
   )
 }
 
 
-function ProjectsSection({projects}: {projects: Project[] | null}){
+function ProjectsSection({projects,className}: {projects: Project[] | null,className?:string}){
 
   return(
-    <div className="space-y-2 col-span-12">
+    <div className={cn("space-y-2 col-span-12  ",className)}>
+        {projects && projects.length > 0 && (
+              <div className="space-y-2 col-span-12">
+
       <div className="flex justify-between items-center">
-      <h1 className="text-lg tracking-tight font-medium ">Last Projects</h1>
+
+          <h1 className="text-lg tracking-tight font-medium ">Last Projects</h1>
       <Link className="text-xs text-muted-foreground hover:text-primary duration-300" href={'/webapp/projects'}>View More</Link>
       </div>
-      <div className="grid gap-4 grid-cols-12 ">
+      <div className="hidden md:grid gap-4 grid-cols-12 ">
         {projects?.reverse().slice(0,3).map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
-        
+        </div>
+        <div className="md:hidden grid  gap-4 grid-cols-12 ">
+        {projects?.reverse().slice(0,2).map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+        </div>
       </div>
+      
+      )}
     </div>
   )
 }
@@ -198,7 +214,7 @@ function ProjectsSection({projects}: {projects: Project[] | null}){
 function ProjectCard({project}: {project:Project}){
 
   return(
-    <Card className="col-span-4">
+    <Card className="col-span-12 md:col-span-6 lg:col-span-4">
        <CardHeader className="">
         <div className="flex justify-between items-center">
           <CardTitle className="text-base">{project.title}</CardTitle>

@@ -61,7 +61,7 @@ export default async function page({}: Props) {
     <div className="flex flex-col  min-h-screen">
       <div className="flex items-center px-4 py-3 justify-between ">
         <div className="flex gap-4 items-center ">
-          <SidebarTrigger />
+        <SidebarTrigger className="sm:hidden" />
           <h1 className="text-lg  font-bold ">Hi, {profile?.display_name}!</h1>
         </div>
         <div className="flex items-center gap-4">
