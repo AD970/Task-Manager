@@ -30,7 +30,7 @@ export default function SignupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [isPending, startTransition] = useTransition();
-  const [error,setError] = useState('')
+  const [error, setError] = useState("");
   const form = useForm<TypeSignupSchema>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -42,11 +42,11 @@ export default function SignupForm({
 
   async function onSubmit(data: TypeSignupSchema) {
     startTransition(async () => {
-   const result =   await signupAction(data);
+      const result = await signupAction(data);
 
-   if(result.error){
-    setError(result.error)
-  }
+      if (result.error) {
+        setError(result.error);
+      }
     });
   }
 
@@ -126,7 +126,7 @@ export default function SignupForm({
                   "Signup"
                 )}
               </Button>
-            
+
               <div className="mt-4 text-center text-sm">
                 Already have an account?{" "}
                 <Link href="/login" className="underline underline-offset-4">

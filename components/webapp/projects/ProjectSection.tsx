@@ -98,7 +98,7 @@ function ProjectCardItem({ project }: ProjectCardItemProps) {
   return (
     <Card
       className={cn(
-         " col-span-12 sm:col-span-6 lg:col-span-4  ",
+        " col-span-12 sm:col-span-6 lg:col-span-4  ",
         project?.color && `bg-${project.color}-500/30`,
         // project?.priority === "high" && "border-destructive",
         // project?.priority === "low" && "border-muted-foreground"
@@ -185,15 +185,19 @@ function ProjectCardItem({ project }: ProjectCardItemProps) {
                 <TaskItem task={task} />
               </div>
             ))}
-            {Array.from({ length: Math.max(4 - (tasks?.length || 0), 0) }).map((_, index) => (
-  <div key={index} className={cn("flex w-full items-center gap-2")}>
-    <Checkbox disabled />
-    <div className="border-b w-full">
-      <div className="h-6"></div>
-    </div>
-  </div>
-))}
-
+            {Array.from({ length: Math.max(4 - (tasks?.length || 0), 0) }).map(
+              (_, index) => (
+                <div
+                  key={index}
+                  className={cn("flex w-full items-center gap-2")}
+                >
+                  <Checkbox disabled />
+                  <div className="border-b w-full">
+                    <div className="h-6"></div>
+                  </div>
+                </div>
+              ),
+            )}
           </CardContent>
           <CardFooter>
             <div className="flex flex-col  gap-2 w-full">

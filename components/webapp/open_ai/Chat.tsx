@@ -1,10 +1,17 @@
-'use client'
+"use client";
 import { TypeAddPromptSchema, AddPromptSchema } from "@/schema/open_ai";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"; // ✅ Import Button
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { getChatGPTResponse } from "@/_actions/open_ai";
 
@@ -21,7 +28,7 @@ export default function Chat() {
 
   async function onSubmit(data: TypeAddPromptSchema) {
     form.reset();
-    
+
     startTransition(async () => {
       const response = await getChatGPTResponse(data.prompt);
       setChatResponse(response); // ✅ Store response in state
@@ -56,7 +63,9 @@ export default function Chat() {
       {chatResponse && (
         <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg mt-4">
           <h3 className="text-lg font-semibold">AI Response:</h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300">{chatResponse}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            {chatResponse}
+          </p>
         </div>
       )}
     </div>

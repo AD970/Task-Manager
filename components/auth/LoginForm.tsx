@@ -1,5 +1,5 @@
 "use client";
-import {  Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ export default function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [isPending, startTransition] = useTransition();
-  const [error,setError] = useState('')
+  const [error, setError] = useState("");
 
   const form = useForm<TypeLoginSchema>({
     resolver: zodResolver(LoginSchema),
@@ -43,8 +43,8 @@ export default function LoginForm({
   async function onSubmit(data: TypeLoginSchema) {
     startTransition(async () => {
       const result = await loginAction(data);
-      if(result.error){
-        setError(result.error)
+      if (result.error) {
+        setError(result.error);
       }
     });
   }
@@ -54,8 +54,7 @@ export default function LoginForm({
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-          </CardDescription>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -106,7 +105,7 @@ export default function LoginForm({
                   "Login"
                 )}
               </Button>
-         
+
               <div className="mt-4 text-center text-sm">
                 Don't have an account?{" "}
                 <Link href="/sign-up" className="underline underline-offset-4">

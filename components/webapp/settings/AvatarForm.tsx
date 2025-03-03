@@ -1,16 +1,16 @@
-'use client';
-import React, { Dispatch, SetStateAction } from 'react';
+"use client";
+import React, { Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { AddAvatar } from "@/_actions/user";
 
 type Props = {
-    setOpen: Dispatch<SetStateAction<boolean>>
-}
+  setOpen: Dispatch<SetStateAction<boolean>>;
+};
 
-export default function AvatarForm({setOpen}: Props) {
+export default function AvatarForm({ setOpen }: Props) {
   const { toast } = useToast();
   const [pending, setPending] = React.useState(false);
 
@@ -21,28 +21,28 @@ export default function AvatarForm({setOpen}: Props) {
     try {
       setPending(true);
       const result = await AddAvatar(formData); // Pass FormData to AddAvatar
-      if(result.error){
+      if (result.error) {
         toast({
           title: "Upload failed",
           description: result.error,
-          variant: "destructive"
+          variant: "destructive",
         });
       } else {
         toast({
           title: "Upload successful",
-          description: "Your profile picture has been updated."
+          description: "Your profile picture has been updated.",
         });
       }
     } catch (error) {
-      console.error('Something went wrong', error);
+      console.error("Something went wrong", error);
       toast({
         title: "Upload failed",
         description: "There was an error uploading your profile picture",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setPending(false);
-      setOpen(false)
+      setOpen(false);
     }
   }
 
@@ -51,7 +51,7 @@ export default function AvatarForm({setOpen}: Props) {
       <Label>Image</Label>
       <Input name="avatar" type="file" accept="image/*" />
       <Button type="submit" disabled={pending}>
-        {pending ?  "Uploading..." : "Submit"}
+        {pending ? "Uploading..." : "Submit"}
       </Button>
     </form>
   );

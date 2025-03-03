@@ -65,13 +65,13 @@ export default async function ProjectPage({
     .select("*")
     .eq("project_id", id);
 
-    const checkedTasks = tasks?.filter((task) => task.checked).length;
-    const totalTasks = tasks?.length || 1; // Avoid division by zero
-   
+  const checkedTasks = tasks?.filter((task) => task.checked).length;
+  const totalTasks = tasks?.length || 1; // Avoid division by zero
+
   return (
     <div className="">
       <div className="p-4 flex gap-4 items-center border-b">
-      <SidebarTrigger className="sm:hidden" />
+        <SidebarTrigger className="sm:hidden" />
 
         <Breadcrumb>
           <BreadcrumbList>
@@ -95,17 +95,17 @@ export default async function ProjectPage({
 
           {/* users */}
           <div className="">
-         <FinishProject active={checkedTasks && totalTasks >  checkedTasks  ? true : false}  project_id={project.id} />
+            <FinishProject
+              active={checkedTasks && totalTasks > checkedTasks ? true : false}
+              project_id={project.id}
+            />
           </div>
         </div>
-      <ProjectTasksSection tasks={tasks} project_id={project.id}/>
+        <ProjectTasksSection tasks={tasks} project_id={project.id} />
       </div>
     </div>
   );
 }
 
-
-
-
-// make it for mobile by using specific render 
+// make it for mobile by using specific render
 // add types to tasks fetch and use search bar

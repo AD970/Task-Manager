@@ -8,13 +8,19 @@ import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import TaskInformationForm from "@/components/webapp/tasks/TaskInformationForm";
 
-export default function MobileTaskItem({task, project_id}: {task: Task, project_id: string}) {
+export default function MobileTaskItem({
+  task,
+  project_id,
+}: {
+  task: Task;
+  project_id: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [screenSize, setScreenSize] = useState({
     isMobile: false,
     isTablet: false,
   });
-  
+
   useEffect(() => {
     function updateScreenSize() {
       setScreenSize({
@@ -26,11 +32,11 @@ export default function MobileTaskItem({task, project_id}: {task: Task, project_
     window.addEventListener("resize", updateScreenSize);
     return () => window.removeEventListener("resize", updateScreenSize);
   }, []);
-  
+
   const { isMobile, isTablet } = screenSize;
   const { toast } = useToast();
   const [checked, setChecked] = useState(task.checked);
-  
+
   const handleCheck = async () => {
     setChecked((prev) => !prev); // Optimistic update
     const response = await OnCheckTask(
@@ -38,7 +44,7 @@ export default function MobileTaskItem({task, project_id}: {task: Task, project_
       checked,
       task?.project_id || project_id || "",
     );
-    
+
     if (response?.error) {
       toast({
         title: response.error,
@@ -51,11 +57,11 @@ export default function MobileTaskItem({task, project_id}: {task: Task, project_
       });
     }
   };
-  
+
   function handleSelect() {
     setIsOpen(true);
   }
-  
+
   return (
     <div className={cn("flex w-full items-center gap-2")}>
       <Checkbox
@@ -86,13 +92,10 @@ export default function MobileTaskItem({task, project_id}: {task: Task, project_
           </span>
         </div>
       </div>
-      
+
       {/* Move Sheet outside of conditional rendering for better state management */}
       {(isMobile || isTablet) && (
-        <Sheet 
-          open={isOpen} 
-          onOpenChange={setIsOpen}
-        >
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTitle />
           <SheetContent
             side={isMobile ? "top" : "right"}

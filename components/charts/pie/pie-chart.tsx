@@ -49,7 +49,9 @@ export function PieChart() {
     .cornerRadius(8);
 
   const labelRadius = radius * 0.8;
-  const arcLabel = arc<PieArcDatum<DataItem>>().innerRadius(labelRadius).outerRadius(labelRadius);
+  const arcLabel = arc<PieArcDatum<DataItem>>()
+    .innerRadius(labelRadius)
+    .outerRadius(labelRadius);
 
   const arcs = pieLayout(data);
 
@@ -78,7 +80,7 @@ export function PieChart() {
         <svg viewBox={`-${radius} -${radius} ${radius * 2} ${radius * 2}`}>
           {/* Sectors with Gradient Fill */}
           {arcs.map((d: PieArcDatum<DataItem>, i) => (
-              <path key={i} fill={gradients[i].colors[0]} d={arcGenerator(d)!} />
+            <path key={i} fill={gradients[i].colors[0]} d={arcGenerator(d)!} />
           ))}
         </svg>
         {/* Labels as absolutely positioned divs */}

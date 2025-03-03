@@ -14,7 +14,13 @@ export default function Landing({}: Props) {
           Join millions of people to capture ideas, organize life, and do
           something creative.
         </p>
-        <Link href={'/login'}  className={cn("mt-6 px-16",buttonVariants({variant: 'outline',size: 'wide'}))}>
+        <Link
+          href={"/login"}
+          className={cn(
+            "mt-6 px-16",
+            buttonVariants({ variant: "outline", size: "wide" }),
+          )}
+        >
           Get Started
         </Link>
       </div>

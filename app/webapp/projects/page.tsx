@@ -20,7 +20,8 @@ export default async function ProjectsPage({}: Props) {
   const { data: projectData, error: projectError } = await supabase
     .from("projects")
     .select("*")
-    .eq("user_id", user_id).neq('status', 'Completed');
+    .eq("user_id", user_id)
+    .neq("status", "Completed");
 
   if (projectError) {
     console.log("something is off");
@@ -28,7 +29,7 @@ export default async function ProjectsPage({}: Props) {
   return (
     <div className="max-h-screen min-h-screen overflow-y-auto">
       <div className="p-4 gap-2 border-b flex items-center">
-      <SidebarTrigger className="sm:hidden" />
+        <SidebarTrigger className="sm:hidden" />
 
         <h1>My Projects</h1>
       </div>

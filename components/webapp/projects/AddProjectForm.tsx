@@ -161,8 +161,6 @@ export default function AddProjectForm({}: Props) {
           )}
         />
 
-       
-
         <FormField
           control={form.control}
           name="day"

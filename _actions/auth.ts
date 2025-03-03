@@ -24,7 +24,7 @@ export const signupAction = async (values: TypeSignupSchema) => {
 
   if (error) {
     console.error(error.code + " " + error.message);
-    return {error: error.message}
+    return { error: error.message };
   } else {
     return redirect("/webapp/dashboard");
   }
@@ -41,7 +41,7 @@ export const loginAction = async (values: TypeLoginSchema) => {
   if (error) {
     console.error(error.code + " " + error.message);
 
-    return {error: error.message}
+    return { error: error.message };
   }
 
   return redirect("/webapp/dashboard");

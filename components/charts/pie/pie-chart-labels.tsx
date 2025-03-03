@@ -15,11 +15,36 @@ const data: DataItem[] = [
     colorFrom: "text-pink-400",
     colorTo: "text-pink-400",
   },
-  { name: "Industrials", value: 631, colorFrom: "text-purple-400", colorTo: "text-purple-400" },
-  { name: "Cyclical", value: 331, colorFrom: "text-indigo-400", colorTo: "text-indigo-400" },
-  { name: "Energy", value: 232, colorFrom: "text-sky-400", colorTo: "text-sky-400" },
-  { name: "Defensive", value: 101, colorFrom: "text-lime-400", colorTo: "text-lime-400" },
-  { name: "Financials", value: 42, colorFrom: "text-amber-400", colorTo: "text-amber-400" },
+  {
+    name: "Industrials",
+    value: 631,
+    colorFrom: "text-purple-400",
+    colorTo: "text-purple-400",
+  },
+  {
+    name: "Cyclical",
+    value: 331,
+    colorFrom: "text-indigo-400",
+    colorTo: "text-indigo-400",
+  },
+  {
+    name: "Energy",
+    value: 232,
+    colorFrom: "text-sky-400",
+    colorTo: "text-sky-400",
+  },
+  {
+    name: "Defensive",
+    value: 101,
+    colorFrom: "text-lime-400",
+    colorTo: "text-lime-400",
+  },
+  {
+    name: "Financials",
+    value: 42,
+    colorFrom: "text-amber-400",
+    colorTo: "text-amber-400",
+  },
 ];
 
 export function PieChartLabels() {
@@ -39,7 +64,9 @@ export function PieChartLabels() {
     .cornerRadius(8);
 
   const labelRadius = radius * 0.8;
-  const arcLabel = arc<PieArcDatum<DataItem>>().innerRadius(labelRadius).outerRadius(labelRadius);
+  const arcLabel = arc<PieArcDatum<DataItem>>()
+    .innerRadius(labelRadius)
+    .outerRadius(labelRadius);
 
   const arcs = pieLayout(data);
   // Calculate the angle for each slice
@@ -62,21 +89,29 @@ export function PieChartLabels() {
             const midAngle = (d.startAngle + d.endAngle) / 2;
 
             return (
-                 <g key={i}>
-                    <path fill={`url(#pieColors-${i})`} d={arcGenerator(d)!} />
-                    <linearGradient
-                      id={`pieColors-${i}`}
-                      x1="0"
-                      y1="0"
-                      x2="1"
-                      y2="0"
-                      gradientTransform={`rotate(${(midAngle * 180) / Math.PI - 90}, 0.5, 0.5)`}
-                    >
-                      <stop offset="0%" stopColor={"currentColor"} className={d.data.colorFrom} />
-                      <stop offset="100%" stopColor={"currentColor"} className={d.data.colorTo} />
-                    </linearGradient>
-                  </g>
-              );
+              <g key={i}>
+                <path fill={`url(#pieColors-${i})`} d={arcGenerator(d)!} />
+                <linearGradient
+                  id={`pieColors-${i}`}
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="0"
+                  gradientTransform={`rotate(${(midAngle * 180) / Math.PI - 90}, 0.5, 0.5)`}
+                >
+                  <stop
+                    offset="0%"
+                    stopColor={"currentColor"}
+                    className={d.data.colorFrom}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor={"currentColor"}
+                    className={d.data.colorTo}
+                  />
+                </linearGradient>
+              </g>
+            );
           })}
         </svg>
 

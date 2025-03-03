@@ -29,7 +29,15 @@ import {
 import { Profile } from "@/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { signOutAction } from "@/_actions/auth";
 import { useState } from "react";
@@ -40,22 +48,20 @@ type Props = {
 };
 export function NavUser({ profile }: Props) {
   const { isMobile } = useSidebar();
-  const [pending,setPending] = useState(false)
-  const {toast} = useToast();
-  async function HandleSubmit(){
-
+  const [pending, setPending] = useState(false);
+  const { toast } = useToast();
+  async function HandleSubmit() {
     try {
-      setPending(true)
+      setPending(true);
       await signOutAction();
     } catch (error) {
-    console.log(error)      
+      console.log(error);
       toast({
-        title: 'Something went wrong!',
-        variant: 'destructive'
-      })
-  }finally{
-      setPending(false)
-    
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setPending(false);
     }
   }
 
@@ -108,23 +114,23 @@ export function NavUser({ profile }: Props) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem className="flex cursor-pointer gap-2 items-center">
-                <Sparkles  />
+                <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Link className="flex gap-2 items-center" href='settings'>
-                <BadgeCheck className="" />
-                Account
+                <Link className="flex gap-2 items-center" href="settings">
+                  <BadgeCheck className="" />
+                  Account
                 </Link>
               </DropdownMenuItem>
-              <Link className="cursor-pointer" href={'/github.com/AD970'}>
-              <DropdownMenuItem className=" cursor-pointer flex gap-2 items-center">
-                <Github />
-                My Github Account
-              </DropdownMenuItem>
+              <Link className="cursor-pointer" href={"/github.com/AD970"}>
+                <DropdownMenuItem className=" cursor-pointer flex gap-2 items-center">
+                  <Github />
+                  My Github Account
+                </DropdownMenuItem>
               </Link>
               <DropdownMenuItem className="flex cursor-pointer gap-2 items-center">
                 <Bell />
@@ -133,11 +139,10 @@ export function NavUser({ profile }: Props) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-                <Button onClick={HandleSubmit} type="submit" >
-
-<LogOut />
-Log out
-</Button>
+              <Button onClick={HandleSubmit} type="submit">
+                <LogOut />
+                Log out
+              </Button>
               {/* <Dialog>
                 <DialogTrigger asChild>
                 </DialogTrigger>
@@ -163,7 +168,6 @@ Log out
                     </DialogFooter>
                   </DialogContent>
               </Dialog> */}
-       
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

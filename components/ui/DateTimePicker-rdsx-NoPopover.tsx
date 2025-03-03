@@ -50,24 +50,22 @@ export function DateTimePickerNoPopver() {
   };
 
   return (
- 
     <div className="">
-
-        <Button
+      <Button
         type="button"
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
-          )}
-        >
-          <CalendarCheck className="mr-2 h-4 w-4" />
-          {date ? (
-              format(date, "MM/dd/yyyy hh:mm aa")
-          ) : (
-            <span>MM/DD/YYYY hh:mm aa</span>
-          )}
-        </Button>
+        variant="outline"
+        className={cn(
+          "w-full justify-start text-left font-normal",
+          !date && "text-muted-foreground",
+        )}
+      >
+        <CalendarCheck className="mr-2 h-4 w-4" />
+        {date ? (
+          format(date, "MM/dd/yyyy hh:mm aa")
+        ) : (
+          <span>MM/DD/YYYY hh:mm aa</span>
+        )}
+      </Button>
       <div className="w-auto p-0">
         <div className="sm:flex">
           <Calendar
@@ -103,11 +101,11 @@ export function DateTimePickerNoPopver() {
               <div className="flex sm:flex-col p-2">
                 {Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => (
                   <Button
-                  key={minute}
+                    key={minute}
                     type="button"
                     size="icon"
                     variant={
-                        date && date.getMinutes() === minute ? "default" : "ghost"
+                      date && date.getMinutes() === minute ? "default" : "ghost"
                     }
                     className="sm:w-full shrink-0 aspect-square"
                     onClick={() =>
@@ -142,9 +140,9 @@ export function DateTimePickerNoPopver() {
                 ))}
               </div>
             </ScrollArea>
-                </div>
           </div>
         </div>
-        </div>
+      </div>
+    </div>
   );
 }

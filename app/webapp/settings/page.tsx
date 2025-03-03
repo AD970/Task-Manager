@@ -1,12 +1,11 @@
-import SettingsSection from '@/components/webapp/settings/SettingsSection'
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-import React from 'react'
+import SettingsSection from "@/components/webapp/settings/SettingsSection";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 export default async function SettingsPage({}: Props) {
-
   const supabase = await createClient();
   const {
     data: { user },
@@ -29,7 +28,7 @@ export default async function SettingsPage({}: Props) {
   }
   return (
     <div>
-        <SettingsSection profile={profileData} />
+      <SettingsSection profile={profileData} />
     </div>
-  )
+  );
 }

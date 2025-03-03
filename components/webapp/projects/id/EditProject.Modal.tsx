@@ -61,13 +61,18 @@ type EditProjectFormProps = {
   onClose?: () => void;
 };
 
-export default function EditProjectForm({ project, onClose }: EditProjectFormProps) {
+export default function EditProjectForm({
+  project,
+  onClose,
+}: EditProjectFormProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const { toast } = useToast();
 
   // Parse the ISO date string to a Date object
-  const plannedDate = project.planned_end_date ? parseISO(project.planned_end_date) : new Date();
+  const plannedDate = project.planned_end_date
+    ? parseISO(project.planned_end_date)
+    : new Date();
 
   const form = useForm<TypeEditProjectSchema>({
     resolver: zodResolver(EditProjectSchema),
@@ -81,22 +86,22 @@ export default function EditProjectForm({ project, onClose }: EditProjectFormPro
 
   async function onSubmit(values: TypeEditProjectSchema) {
     startTransition(async () => {
-       await EditProject(project.id, values).then((data) => {
-            if (data?.error) {
-                setError(data?.error);
-                toast({
-                    title: "Uh oh! Something went wrong.",
-                    description: "There was a problem with your request.",
-                });
-            } else if (data?.success) {
-                toast({
-                    title: data.success,
-                });
-                if (onClose) {
-                    onClose();
-                }
-            }
-        });
+      await EditProject(project.id, values).then((data) => {
+        if (data?.error) {
+          setError(data?.error);
+          toast({
+            title: "Uh oh! Something went wrong.",
+            description: "There was a problem with your request.",
+          });
+        } else if (data?.success) {
+          toast({
+            title: data.success,
+          });
+          if (onClose) {
+            onClose();
+          }
+        }
+      });
     });
   }
 
@@ -172,7 +177,6 @@ export default function EditProjectForm({ project, onClose }: EditProjectFormPro
           )}
         />
 
-      
         <FormField
           control={form.control}
           name="day"

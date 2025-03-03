@@ -39,7 +39,7 @@ const generateTimeOptions = () => {
 
 const timeOptions = generateTimeOptions();
 
-export default function AddTaskModal({project_id}: {project_id:string}) {
+export default function AddTaskModal({ project_id }: { project_id: string }) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const { toast } = useToast();
@@ -83,7 +83,12 @@ export default function AddTaskModal({project_id}: {project_id:string}) {
               <FormItem>
                 <FormLabel>Task Title</FormLabel>
                 <FormControl>
-                  <Input {...field} type="text" placeholder="Add task" autoComplete="off" />
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="Add task"
+                    autoComplete="off"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -98,9 +103,16 @@ export default function AddTaskModal({project_id}: {project_id:string}) {
               <FormItem>
                 <FormLabel>Priority</FormLabel>
                 <FormControl>
-                  <RadioGroup value={field.value} className="flex gap-4" onValueChange={field.onChange}>
+                  <RadioGroup
+                    value={field.value}
+                    className="flex gap-4"
+                    onValueChange={field.onChange}
+                  >
                     {priorities.map((priority) => (
-                      <div key={priority.value} className="flex space-x-2 items-center">
+                      <div
+                        key={priority.value}
+                        className="flex space-x-2 items-center"
+                      >
                         <RadioGroupItem value={priority.value} />
                         <FaFlag className={cn(priority.color)} />
                       </div>
@@ -128,22 +140,21 @@ export default function AddTaskModal({project_id}: {project_id:string}) {
           />
 
           {/* Task Date */}
-        <FormField
-                  control={form.control}
-                  name="day"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Time</FormLabel>
-                      <FormControl>
-                        <DateTimePicker />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <FormField
+            control={form.control}
+            name="day"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Time</FormLabel>
+                <FormControl>
+                  <DateTimePicker />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Task Time */}
-
 
           {/* Submit Button */}
           <Button type="submit" className="mt-4" disabled={isPending}>

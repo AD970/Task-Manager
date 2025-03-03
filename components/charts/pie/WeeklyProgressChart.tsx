@@ -2,7 +2,11 @@ import { pie, arc, PieArcDatum } from "d3";
 
 type Item = { name: string; value: number };
 
-export function WeeklyProgressChart({weeklyProgress}: {weeklyProgress: number}) {
+export function WeeklyProgressChart({
+  weeklyProgress,
+}: {
+  weeklyProgress: number;
+}) {
   const radius = 420; // Chart base dimensions
   const lightStrokeEffect = 10; // 3d light effect around the slice
 
@@ -23,7 +27,9 @@ export function WeeklyProgressChart({weeklyProgress}: {weeklyProgress: number}) 
 
   // Adjust innerRadius to create a donut shape
   const innerRadius = radius / 1.625;
-  const arcGenerator = arc<PieArcDatum<Item>>().innerRadius(innerRadius).outerRadius(radius);
+  const arcGenerator = arc<PieArcDatum<Item>>()
+    .innerRadius(innerRadius)
+    .outerRadius(radius);
 
   // Create an arc generator for the clip path that matches the outer path of the arc
   const arcClip =
@@ -47,7 +53,10 @@ export function WeeklyProgressChart({weeklyProgress}: {weeklyProgress: number}) 
       >
         <defs>
           {arcs.map((d, i) => (
-            <clipPath key={`fillable-donut-clip-${i}`} id={`fillable-donut-clip-${i}`}>
+            <clipPath
+              key={`fillable-donut-clip-${i}`}
+              id={`fillable-donut-clip-${i}`}
+            >
               <path d={arcClip(d) || undefined} />
             </clipPath>
           ))}
@@ -71,7 +80,9 @@ export function WeeklyProgressChart({weeklyProgress}: {weeklyProgress: number}) 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-lg font-semibold leading-5">Done</span>
         <div className="text-xl font-bold">
-          <span className="text-violet-600 dark:text-violet-400">{data[0].value}%</span>
+          <span className="text-violet-600 dark:text-violet-400">
+            {data[0].value}%
+          </span>
           <span className="text-zinc-400 dark:text-zinc-600"> / 100</span>
         </div>
       </div>

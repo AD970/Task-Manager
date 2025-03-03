@@ -63,7 +63,9 @@ export function PieChartStocks() {
     .cornerRadius(8);
 
   const labelRadius = radius * 0.8;
-  const arcLabel = arc<PieArcDatum<DataItem>>().innerRadius(labelRadius).outerRadius(labelRadius);
+  const arcLabel = arc<PieArcDatum<DataItem>>()
+    .innerRadius(labelRadius)
+    .outerRadius(labelRadius);
 
   const arcs = pieLayout(data);
 
@@ -105,12 +107,12 @@ export function PieChartStocks() {
 
           {/* Slices */}
           {arcs.map((d: PieArcDatum<DataItem>, i) => (
-              <path
-                  key={i}
-                  fill={"currentColor"}
-                  d={arcGenerator(d)!}
-                  className={`${d.data.color}`}
-                />
+            <path
+              key={i}
+              fill={"currentColor"}
+              d={arcGenerator(d)!}
+              className={`${d.data.color}`}
+            />
           ))}
         </svg>
 

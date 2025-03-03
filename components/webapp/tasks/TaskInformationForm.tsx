@@ -27,10 +27,7 @@ import { EditTaskSchema, TypeEditTaskSchema } from "@/schema/task";
 
 import React, { startTransition, useEffect, useTransition } from "react";
 import { priorities } from "@/constants";
-import {
-
-  LoaderCircle,
-} from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -47,7 +44,7 @@ import { DateTimePicker } from "@/components/ui/DateTimePicker-rdsx";
 import { useIsMobile } from "@/hooks/use-mobile";
 type Props = {
   task: Task;
-  setIsOpen?: Dispatch<SetStateAction<boolean>>
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
 const generateTimeOptions = () => {
@@ -63,7 +60,7 @@ const generateTimeOptions = () => {
   return times;
 };
 
-export default function TaskInformationForm({ task,setIsOpen }: Props) {
+export default function TaskInformationForm({ task, setIsOpen }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const { toast } = useToast();
@@ -91,7 +88,7 @@ export default function TaskInformationForm({ task,setIsOpen }: Props) {
       description: task?.description || "",
     },
   });
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
   async function onSubmit(values: TypeEditTaskSchema) {
     startTransition(async () => {
       await EditTask(task_id, values).then((data) => {
@@ -108,11 +105,10 @@ export default function TaskInformationForm({ task,setIsOpen }: Props) {
           description: data.success,
         });
         selectTask(null);
-     setIsOpen &&   setIsOpen(false)
+        setIsOpen && setIsOpen(false);
       });
     });
   }
-
 
   return (
     <div>
@@ -192,34 +188,34 @@ export default function TaskInformationForm({ task,setIsOpen }: Props) {
 
           {/* calendar */}
           {isMobile ? (
-  <FormField
-  control={form.control}
-  name="day"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Time</FormLabel>
-      <FormControl>
-        <DateTimePickerNoPopver />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-          ): (
             <FormField
-            control={form.control}
-            name="day"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Time</FormLabel>
-                <FormControl>
-                  <DateTimePicker />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />          )}
-       
+              control={form.control}
+              name="day"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Time</FormLabel>
+                  <FormControl>
+                    <DateTimePickerNoPopver />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <FormField
+              control={form.control}
+              name="day"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Time</FormLabel>
+                  <FormControl>
+                    <DateTimePicker />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <Button disabled={isPending} className="w-full" type="submit">
             {isPending ? (

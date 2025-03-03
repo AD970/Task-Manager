@@ -37,7 +37,7 @@ export async function AddTask(values: TypeAddTaskSchema) {
   const { error } = await supabase.from("tasks").insert(insertedTask);
 
   if (error) {
-    console.log("error is:",error)
+    console.log("error is:", error);
     return { error: "Something went wrong" };
   }
   revalidatePath("/webapp/tasks");
@@ -55,9 +55,8 @@ export async function OnCheckTask(
   } = await supabase.auth.getUser();
 
   if (userError || !user?.id) {
-    return redirect('/login')
+    return redirect("/login");
   }
-
 
   const user_id = user.id;
 
@@ -70,16 +69,16 @@ export async function OnCheckTask(
     return { error: "Something went wrong, please try again" };
   }
 
-  if (project_id ) {
-  const { data: tasks, error: tasksError } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("user_id", user_id)
-    .eq("project_id", project_id);
+  if (project_id) {
+    const { data: tasks, error: tasksError } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("user_id", user_id)
+      .eq("project_id", project_id);
 
-  if (tasksError || !tasks) {
-    return { error: "Failed to fetch project tasks" };
-  }
+    if (tasksError || !tasks) {
+      return { error: "Failed to fetch project tasks" };
+    }
 
     const checkedTasks = tasks?.filter((task) => task.checked).length;
     const totalTasks = tasks?.length || 1; // Avoid division by zero
@@ -97,7 +96,11 @@ export async function OnCheckTask(
 
   // Revalidate the page so the UI updates
   revalidatePath("/webapp", "layout");
-  return { success: task_checked ? 'Check Mark Have Been Removed Successfully'  : 'Task Have Been Finished Successfully' }
+  return {
+    success: task_checked
+      ? "Check Mark Have Been Removed Successfully"
+      : "Task Have Been Finished Successfully",
+  };
 }
 
 export async function EditTask(task_id: number, values: TypeEditTaskSchema) {
