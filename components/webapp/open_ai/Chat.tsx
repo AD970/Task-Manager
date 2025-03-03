@@ -31,7 +31,7 @@ export default function Chat() {
 
     startTransition(async () => {
       const response = await getChatGPTResponse(data.prompt);
-      setChatResponse(response); // ✅ Store response in state
+      // setChatResponse(response); // ✅ Store response in state
       console.log(response);
     });
   }
